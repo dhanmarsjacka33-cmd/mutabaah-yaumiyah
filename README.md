@@ -1,1 +1,1 @@
-# Mutaba-ah-Yaumiyah-YAMALI
+# mutabaah-yaumiyah
