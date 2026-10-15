@@ -1,1 +1,7 @@
+name = "mutabaah-api"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
 
+# Tidak perlu KV/D1 karena database di Google Sheets
+# Variabel akan diset via `wrangler secret put`
