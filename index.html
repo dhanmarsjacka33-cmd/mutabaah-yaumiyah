@@ -595,17 +595,32 @@
       }
     }
 
-    async function gsRun(fn, ...args) {
+        async function gsRun(fn, ...args) {
       const params = buildParams(fn, args);
-      const res = await fetch(GAS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: fn, params })
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
+      try {
+        const res = await fetch(GAS_URL, {
+          method: 'POST',
+          // KUNCI 1: text/plain agar browser tidak memicu preflight CORS
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          // KUNCI 2: redirect follow karena GAS melakukan redirect internal
+          redirect: 'follow',
+          body: JSON.stringify({ action: fn, params })
+        });
+        
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        const text = await res.text();
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          console.error('Response bukan JSON:', text.substring(0, 200));
+          throw new Error('Gagal parse JSON. Pastikan URL /exec benar dan akses Anyone.');
+        }
+      } catch (error) {
+        console.error(`[Fetch Error: ${fn}]`, error);
+        throw error;
+      }
     }
-
     let appState = {
       userRole: null, userName: null, username: null,
       kelasBinaan: [], gender: 'L', isHaid: false, source: null,
@@ -849,7 +864,7 @@
       await loadPersonalHistoryChart();
     }
 
-    async function loadExistingEntry() {
+        async function loadExistingEntry() {
       const tanggal = $('tglInput').value;
       if (!tanggal) return;
       const nama = getEffectiveName(); const role = getEffectiveRole();
@@ -859,20 +874,26 @@
         if (res && res.found) {
           const e = res.entry;
           const setCb = (id, v) => { const el = $(id); if (el) el.checked = (v === 'Ya'); };
-          setCb('f_shubuh', e.Shubuh); setCb('f_dzuhur', e.Dzuhur); setCb('f_ashar', e.Ashar); setCb('f_maghrib', e.Maghrib); setCb('f_isya', e.Isya);
           
+          setCb('f_shubuh', e.Shubuh); setCb('f_dzuhur', e.Dzuhur); 
+          setCb('f_ashar', e.Ashar); setCb('f_maghrib', e.Maghrib); setCb('f_isya', e.Isya);
+          
+          // Rawatib
           setCb('f_rawatib_shubuh_qab', e.RawatibShubuhQab);
           setCb('f_rawatib_dzuhur_qab', e.RawatibDzuhurQab);
           setCb('f_rawatib_dzuhur_bad', e.RawatibDzuhurBad);
           setCb('f_rawatib_maghrib_bad', e.RawatibMaghribBad);
           setCb('f_rawatib_isya_bad', e.RawatibIsyaBad);
 
+          // Amalan Lain (Guru)
           setCb('f_dzikir', e.Dzikir); 
           setCb('f_tilawah_5lbr', e.Tilawah5Lbr); 
           setCb('f_qiyamullail', e.Qiyamullail); 
           setCb('f_ibadah_sunnah', e.IbadahSunnah);
           
-          setCb('f_bantuOrtu', e.BantuOrtu); setCb('f_bijakHP', e.BijakHP); setCb('f_belajar', e.Belajar); setCb('f_tidur', e.Tidur); setCb('f_tilawah', e.Tilawah);
+          // Amalan Lain (Siswa)
+          setCb('f_bantuOrtu', e.BantuOrtu); setCb('f_bijakHP', e.BijakHP); 
+          setCb('f_belajar', e.Belajar); setCb('f_tidur', e.Tidur); setCb('f_tilawah', e.Tilawah);
           
           const hd = $('toggleHaid');
           if (hd && e.Haid === 'Ya') { hd.checked = true; handleHaidToggle(); }
@@ -881,7 +902,6 @@
         }
       } catch (e) {}
     }
-
     function goNextStudent() {
       const sel = $('fillForNama');
       const opts = Array.from(sel.options).filter(o => o.value && o.value !== '__self__');
@@ -1158,22 +1178,29 @@
       const scoreEl = $('liveScore'); if (scoreEl) scoreEl.innerText = total;
     }
 
-    async function submitForm() {
+        async function submitForm() {
       const btn = $('btnSubmitForm'); const originalHtml = btn.innerHTML;
       const tanggal = $('tglInput').value;
       if (!tanggal) return showToast('Tanggal tidak valid.', 'error');
       const role = getEffectiveRole(); const nama = getEffectiveName();
       const isStaff = STAFF_ROLES.includes(role);
+      
       const payload = { role, nama, tanggal, catatan: $('catatanForm').value, isHaid: appState.isHaid ? 'Ya' : 'Tidak' };
       
-      ['shubuh','dzuhur','ashar','maghrib','isya'].forEach(k => { const el = $(`f_${k}`); payload[k] = el && el.checked ? 'Ya' : 'Tidak'; });
+      // Shalat Fardhu
+      ['shubuh','dzuhur','ashar','maghrib','isya'].forEach(k => { 
+        const el = $(`f_${k}`); 
+        payload[k] = el && el.checked ? 'Ya' : 'Tidak'; 
+      });
       
+      // Rawatib (Wajib dikirim ke backend)
       payload.rawatib_shubuh_qab = $('f_rawatib_shubuh_qab') && $('f_rawatib_shubuh_qab').checked ? 'Ya' : 'Tidak';
       payload.rawatib_dzuhur_qab = $('f_rawatib_dzuhur_qab') && $('f_rawatib_dzuhur_qab').checked ? 'Ya' : 'Tidak';
       payload.rawatib_dzuhur_bad = $('f_rawatib_dzuhur_bad') && $('f_rawatib_dzuhur_bad').checked ? 'Ya' : 'Tidak';
       payload.rawatib_maghrib_bad = $('f_rawatib_maghrib_bad') && $('f_rawatib_maghrib_bad').checked ? 'Ya' : 'Tidak';
       payload.rawatib_isya_bad = $('f_rawatib_isya_bad') && $('f_rawatib_isya_bad').checked ? 'Ya' : 'Tidak';
 
+      // Amalan Lain (Guru vs Siswa)
       if (isStaff) {
         payload.dzikir = $('f_dzikir') && $('f_dzikir').checked ? 'Ya' : 'Tidak';
         payload.tilawah_5lbr = $('f_tilawah_5lbr') && $('f_tilawah_5lbr').checked ? 'Ya' : 'Tidak';
@@ -1194,6 +1221,7 @@
         localStorage.setItem('myq_queue', JSON.stringify(appState.offlineQueue));
         showToast('Tersimpan offline di HP.', 'warning'); resetForm(); return;
       }
+      
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...'; btn.disabled = true;
       try {
         const res = await gsRun('submitMutabaah', payload);
@@ -1208,7 +1236,6 @@
         showToast('Server tidak merespon. Data disimpan offline.', 'warning'); resetForm();
       } finally { btn.innerHTML = originalHtml; btn.disabled = false; }
     }
-
     function resetForm(resetHaid = true) {
       document.querySelectorAll('#formChecklist input[type="checkbox"]').forEach(c => { c.checked = false; c.disabled = false; });
       $('catatanForm').value = '';
