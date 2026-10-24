@@ -109,7 +109,8 @@ function fixAllHeaders() {
     // Auto-resize columns
     sh.autoResizeColumns(1, headers.length);
   });
-  SpreadsheetApp.getUi().alert('fixAllHeaders selesai — semua sheet header sudah rapi.');
+  SpreadsheetApp.flush();
+  Logger.log('fixAllHeaders selesai — semua sheet header sudah rapi.');
 }
 
 function getSheet(name) {
