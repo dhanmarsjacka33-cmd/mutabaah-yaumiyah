@@ -561,7 +561,7 @@
     // KONFIGURASI GOOGLE APPS SCRIPT
     // ============================================================
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP DARI CODE.GS ANDA (HARUS BERAKHIRAN /exec)
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbw-SQoNpwzi4olglFMIc_Bs5zAyCvhIurbfaXJZhehGdeaH4mP5_H5AlFYCzyisDSgR/exec'; 
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycb.../exec'; 
 
     const $ = id => document.getElementById(id);
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -799,22 +799,46 @@
       try {
         const res = await gsRun('getStudentsForBulk');
         let list = res || [];
+        
         if (r === 'wali' || r === 'musyrif') {
           const binaan = (appState.kelasBinaan || []).map(k => k.toLowerCase().trim());
-          list = list.filter(s => { const kls = (s.kelas || '').toLowerCase().split(/[,;]+/).map(x => x.trim()); return kls.some(k => binaan.includes(k)); });
+          list = list.filter(s => { 
+            const kls = (s.kelas || '').toLowerCase().split(/[,;]+/).map(x => x.trim()); 
+            return kls.some(k => binaan.includes(k)); 
+          });
         }
+        
         appState.fillForList = list;
         const jenjangSet = new Set();
-        list.forEach(s => { (s.kelas || '').split(/[,;]+/).forEach(k => { const jj = k.trim().split('.')[0]; if (['7','8','9'].includes(jj)) jenjangSet.add('smp'); if (['10','11','12'].includes(jj)) jenjangSet.add('sma'); }); });
+        
+        // Deteksi jenjang yang lebih toleran (mendeteksi awalan angka)
+        list.forEach(s => {
+          (s.kelas || '').split(/[,;]+/).forEach(k => {
+            const kk = k.trim();
+            if (/^(7|8|9)/.test(kk)) jenjangSet.add('smp');
+            if (/^(10|11|12)/.test(kk)) jenjangSet.add('sma');
+          });
+        });
+        
         const jenjangArr = ['smp','sma'].filter(j => jenjangSet.has(j));
+        
         let html = '<option value="">— Pilih Jenjang —</option>';
-        jenjangArr.forEach(j => { html += `<option value="${j}">${j === 'smp' ? 'SMP (7-9)' : 'SMA (10-12)'}</option>`; });
+        if (jenjangArr.length === 0) {
+          html = '<option value="all">Semua Jenjang</option>';
+        } else {
+          jenjangArr.forEach(j => { html += `<option value="${j}">${j === 'smp' ? 'SMP (7-9)' : 'SMA (10-12)'}</option>`; });
+        }
+        
         $('fillForJenjang').innerHTML = html;
         $('fillForKelas').innerHTML = '<option value="">— Pilih Kelas —</option>';
         $('fillForNama').innerHTML = '<option value="">— Pilih Nama —</option>';
         $('fillForBadge').classList.add('hidden'); $('fillForNav').classList.add('hidden');
         appState.fillFor = null;
-        if (jenjangArr.length === 1) { $('fillForJenjang').value = jenjangArr[0]; onFillForJenjangChange(); }
+        
+        if (jenjangArr.length === 1) { 
+          $('fillForJenjang').value = jenjangArr[0]; 
+          onFillForJenjangChange(); 
+        }
       } catch (e) { console.error(e); }
     }
 
@@ -823,13 +847,23 @@
       appState.fillFor = null;
       $('fillForBadge').classList.add('hidden'); $('fillForNav').classList.add('hidden');
       if (!j) { $('fillForKelas').innerHTML = '<option value="">— Pilih Kelas —</option>'; $('fillForNama').innerHTML = '<option value="">— Pilih Nama —</option>'; return; }
+      
       const kelasSet = new Set();
-      appState.fillForList.forEach(s => { (s.kelas || '').split(/[,;]+/).forEach(k => { const kk = k.trim(); const jj = kk.split('.')[0]; if (j === 'smp' && ['7','8','9'].includes(jj)) kelasSet.add(kk); if (j === 'sma' && ['10','11','12'].includes(jj)) kelasSet.add(kk); }); });
-      const kelasArr = Array.from(kelasSet).sort((a,b) => { const pa = a.split('.').map(Number), pb = b.split('.').map(Number); if (pa[0] !== pb[0]) return pa[0] - pb[0]; return (pa[1]||0) - (pb[1]||0); });
+      appState.fillForList.forEach(s => {
+        (s.kelas || '').split(/[,;]+/).forEach(k => {
+          const kk = k.trim();
+          if (j === 'all') { kelasSet.add(kk); return; }
+          if (j === 'smp' && /^(7|8|9)/.test(kk)) kelasSet.add(kk);
+          if (j === 'sma' && /^(10|11|12)/.test(kk)) kelasSet.add(kk);
+        });
+      });
+      
+      const kelasArr = Array.from(kelasSet).sort((a,b) => a.localeCompare(b, undefined, { numeric: true }));
       let html = '<option value="">— Pilih Kelas —</option>';
       kelasArr.forEach(k => { html += `<option value="${esc(k)}">${esc(k)}</option>`; });
       $('fillForKelas').innerHTML = html;
       $('fillForNama').innerHTML = '<option value="">— Pilih Nama —</option>';
+      
       if (kelasArr.length === 1) { $('fillForKelas').value = kelasArr[0]; onFillForKelasChange(); }
     }
 
@@ -921,7 +955,7 @@
       ['bulk_shubuh','bulk_dzuhur','bulk_ashar','bulk_maghrib','bulk_isya','bulk_bantuOrtu','bulk_bijakHP','bulk_belajar','bulk_tidur','bulk_tilawah'].forEach(id => { const el = $(id); if (el) el.checked = false; });
       $('bulkCatatan').value = '';
       const jenjangSet = new Set();
-      appState.fillForList.forEach(s => { (s.kelas || '').split(/[,;]+/).forEach(k => { const jj = k.trim().split('.')[0]; if (['7','8','9'].includes(jj)) jenjangSet.add('smp'); if (['10','11','12'].includes(jj)) jenjangSet.add('sma'); }); });
+      appState.fillForList.forEach(s => { (s.kelas || '').split(/[,;]+/).forEach(k => { const jj = k.trim(); if (/^(7|8|9)/.test(jj)) jenjangSet.add('smp'); if (/^(10|11|12)/.test(jj)) jenjangSet.add('sma'); }); });
       const jenjangArr = ['smp','sma'].filter(j => jenjangSet.has(j));
       let html = '<option value="">— Pilih Jenjang —</option>';
       jenjangArr.forEach(j => { html += `<option value="${j}">${j === 'smp' ? 'SMP (7-9)' : 'SMA (10-12)'}</option>`; });
@@ -934,8 +968,8 @@
       $('bulkPreview').classList.add('hidden'); $('bulkForm').classList.add('hidden');
       if (!j) { $('bulkKelas').innerHTML = '<option value="">— Pilih Kelas —</option>'; return; }
       const kelasSet = new Set();
-      appState.fillForList.forEach(s => { (s.kelas || '').split(/[,;]+/).forEach(k => { const kk = k.trim(), jj = kk.split('.')[0]; if (j === 'smp' && ['7','8','9'].includes(jj)) kelasSet.add(kk); if (j === 'sma' && ['10','11','12'].includes(jj)) kelasSet.add(kk); }); });
-      const kelasArr = Array.from(kelasSet).sort((a,b) => { const pa = a.split('.').map(Number), pb = b.split('.').map(Number); if (pa[0] !== pb[0]) return pa[0] - pb[0]; return (pa[1]||0) - (pb[1]||0); });
+      appState.fillForList.forEach(s => { (s.kelas || '').split(/[,;]+/).forEach(k => { const kk = k.trim(); if (j === 'smp' && /^(7|8|9)/.test(kk)) kelasSet.add(kk); if (j === 'sma' && /^(10|11|12)/.test(kk)) kelasSet.add(kk); }); });
+      const kelasArr = Array.from(kelasSet).sort((a,b) => a.localeCompare(b, undefined, { numeric: true }));
       let html = '<option value="">— Pilih Kelas —</option>';
       kelasArr.forEach(k => { html += `<option value="${esc(k)}">${esc(k)}</option>`; });
       $('bulkKelas').innerHTML = html;
