@@ -1,7 +1,7 @@
 // ============================================================
 // KONFIGURASI
 // ============================================================
-const SPREADSHEET_ID = "1RBf5v_iP7kMTOinPCcc5x2_XxIlYiRTb7NwE5-89-iI";
+const SPREADSHEET_ID = "1RBf5v_iP7kMTOinPCcc5x2_XxIlYiRTb7NwE5-89-iI"; // TODO: pindah ke wrangler secret SPREADSHEET_ID
 const TZ = "Asia/Jakarta";
 
 // ============================================================
@@ -443,6 +443,40 @@ async function submitMutabaah(token, payload) {
 
   const streak = await calculateStreak(token, nama, isTeacher);
   return { success: true, message: "Mutabaah berhasil disimpan!", streak };
+}
+
+// --- BULK SUBMIT MUTABAAH ---
+async function bulkSubmitMutabaah(token, payloads) {
+  if (!Array.isArray(payloads) || payloads.length === 0) {
+    return { success: false, message: "Payloads kosong" };
+  }
+  const results = [];
+  for (const payload of payloads) {
+    try {
+      const r = await submitMutabaah(token, payload);
+      results.push(r);
+    } catch (e) {
+      results.push({ success: false, message: e.message });
+    }
+  }
+  const failed = results.filter(r => !r.success);
+  return {
+    success: true,
+    message: `${results.length - failed.length}/${results.length} berhasil disimpan`,
+    details: results,
+  };
+}
+
+// --- GET STUDENTS FOR BULK ---
+async function getStudentsForBulk(token) {
+  const { data, map } = await fetchSheetData(token, "Master_Siswa");
+  const students = data.map(row => ({
+    nama: readField(row, map, "Nama") || "",
+    nis: readField(row, map, "NIS") || "",
+    kelas: readField(row, map, "Kelas") || "",
+    gender: readField(row, map, "Gender") || "L",
+  })).filter(s => s.nama);
+  return students;
 }
 
 async function calculateStreak(token, nama, isTeacher) {
@@ -961,16 +995,39 @@ async function getStudentTimeline(token, nama, role, days) {
 }
 
 // --- SAVE CLASS ---
-async function saveClass(token, nama) {
+async function saveClass(token, id, nama) {
   if (!nama || !nama.toString().trim()) {
     return { success: false, message: "Nama kelas wajib diisi" };
   }
-  const { headers, map } = await fetchSheetData(token, "Master_Kelas");
-  const row = buildRow(headers, map, {
+  const { headers, data, map } = await fetchSheetData(token, "Master_Kelas");
+
+  // UPDATE jika id ada
+  if (id) {
+    for (let i = 0; i < data.length; i++) {
+      if (String(readField(data[i], map, "ID")) === String(id)) {
+        const rowIndex = i + 2;
+        const row = buildRow(headers, map, {
+          ID: id,
+          NamaKelas: nama.toString().trim(),
+        });
+        await sheetsUpdate(token, `Master_Kelas!A${rowIndex}:Z${rowIndex}`, [row]);
+        return { success: true, message: "Kelas berhasil diperbarui" };
+      }
+    }
+    return { success: false, message: "Kelas tidak ditemukan" };
+  }
+
+  // INSERT baru — cek duplikat nama
+  for (const row of data) {
+    if (String(readField(row, map, "NamaKelas")).toLowerCase() === nama.toString().toLowerCase().trim()) {
+      return { success: false, message: "Nama kelas sudah dipakai." };
+    }
+  }
+  const newRow = buildRow(headers, map, {
     ID: crypto.randomUUID(),
     NamaKelas: nama.toString().trim(),
   });
-  await sheetsAppend(token, "Master_Kelas!A:Z", [row]);
+  await sheetsAppend(token, "Master_Kelas!A:Z", [newRow]);
   return { success: true, message: "Kelas berhasil disimpan" };
 }
 
@@ -988,20 +1045,40 @@ async function deleteClass(token, id) {
 }
 
 // --- SAVE STUDENT ---
-async function saveStudent(token, nis, pin, namaLengkap, gender, kelasBinaan) {
+async function saveStudent(token, id, nis, pin, namaLengkap, gender, kelasBinaan) {
   if (!nis || !nis.toString().trim()) {
     return { success: false, message: "NIS wajib diisi" };
   }
   const { headers, data, map } = await fetchSheetData(token, "Master_Siswa");
 
-  // Cek duplikat
+  // UPDATE jika id ada
+  if (id) {
+    for (let i = 0; i < data.length; i++) {
+      if (String(readField(data[i], map, "ID")) === String(id)) {
+        const rowIndex = i + 2;
+        const row = buildRow(headers, map, {
+          ID: id,
+          NIS: nis.toString().trim(),
+          Nama: (namaLengkap || nis).toString().trim(),
+          Kelas: (kelasBinaan || "").toString().trim(),
+          Gender: (gender || "L").toString().trim(),
+          PIN: (pin || "1234").toString().trim(),
+        });
+        await sheetsUpdate(token, `Master_Siswa!A${rowIndex}:Z${rowIndex}`, [row]);
+        return { success: true, message: "Akun siswa berhasil diperbarui" };
+      }
+    }
+    return { success: false, message: "Siswa tidak ditemukan" };
+  }
+
+  // INSERT baru — cek duplikat NIS
   for (const row of data) {
     if (String(readField(row, map, "NIS")).toLowerCase() === nis.toString().toLowerCase().trim()) {
       return { success: false, message: "NIS sudah dipakai." };
     }
   }
 
-  const row = buildRow(headers, map, {
+  const newRow = buildRow(headers, map, {
     ID: crypto.randomUUID(),
     NIS: nis.toString().trim(),
     Nama: (namaLengkap || nis).toString().trim(),
@@ -1010,7 +1087,7 @@ async function saveStudent(token, nis, pin, namaLengkap, gender, kelasBinaan) {
     PIN: (pin || "1234").toString().trim(),
   });
 
-  await sheetsAppend(token, "Master_Siswa!A:Z", [row]);
+  await sheetsAppend(token, "Master_Siswa!A:Z", [newRow]);
   return { success: true, message: "Akun siswa berhasil disimpan" };
 }
 
@@ -1241,6 +1318,12 @@ export default {
         case "submitMutabaah":
           result = await submitMutabaah(token, params.payload);
           break;
+        case "bulkSubmitMutabaah":
+          result = await bulkSubmitMutabaah(token, params.payloads);
+          break;
+        case "getStudentsForBulk":
+          result = await getStudentsForBulk(token);
+          break;
         case "getMutabaahEntry":
           result = await getMutabaahEntry(token, params.nama, params.tanggal, params.role);
           break;
@@ -1294,13 +1377,13 @@ export default {
           result = await getStudentTimeline(token, params.nama, params.role, params.days);
           break;
         case "saveClass":
-          result = await saveClass(token, params.nama);
+          result = await saveClass(token, params.id, params.nama);
           break;
         case "deleteClass":
           result = await deleteClass(token, params.id);
           break;
         case "saveStudent":
-          result = await saveStudent(token, params.nis, params.pin, params.namaLengkap, params.gender, params.kelasBinaan);
+          result = await saveStudent(token, params.id, params.nis, params.pin, params.namaLengkap, params.gender, params.kelasBinaan);
           break;
         case "deleteStudent":
           result = await deleteStudent(token, params.nis);
