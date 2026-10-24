@@ -922,8 +922,21 @@
         if (res && res.found) {
           const e = res.entry;
           const setCb = (id, v) => { const el = $(id); if (el) el.checked = (v === 'Ya'); };
+          // Shalat wajib — set dulu, lalu show rawatib jika terisi
           setCb('f_shubuh', e.Shubuh); setCb('f_dzuhur', e.Dzuhur); setCb('f_ashar', e.Ashar); setCb('f_maghrib', e.Maghrib); setCb('f_isya', e.Isya);
-          setCb('f_dzikir', e.Dzikir); setCb('f_tilawah_2lbr', e.Tilawah2Lbr); setCb('f_mujahadah', e.MujahadahMandiri || e.BahanAjar);
+          ['f_shubuh','f_dzuhur','f_ashar','f_maghrib','f_isya'].forEach(id => toggleRawatib(id));
+          // Rawatib muakkad
+          setCb('f_rawatib_shubuh_qab',  e.RawatibShubuhQab);
+          setCb('f_rawatib_dzuhur_qab',  e.RawatibDzuhurQab);
+          setCb('f_rawatib_dzuhur_bad',  e.RawatibDzuhurBad);
+          setCb('f_rawatib_maghrib_bad', e.RawatibMaghribBad);
+          setCb('f_rawatib_isya_bad',    e.RawatibIsyaBad);
+          // Staff
+          setCb('f_dzikir',        e.Dzikir);
+          setCb('f_tilawah_5lbr',  e.Tilawah5Lbr);
+          setCb('f_qiyamullail',   e.Qiyamullail);
+          setCb('f_ibadah_sunnah', e.IbadahSunnah);
+          // Siswa
           setCb('f_bantuOrtu', e.BantuOrtu); setCb('f_bijakHP', e.BijakHP); setCb('f_belajar', e.Belajar); setCb('f_tidur', e.Tidur); setCb('f_tilawah', e.Tilawah);
           const hd = $('toggleHaid');
           if (hd && e.Haid === 'Ya') { hd.checked = true; handleHaidToggle(); }
@@ -1156,13 +1169,56 @@
       const gender = getEffectiveGender(); const role = getEffectiveRole();
       const isStaff = STAFF_ROLES.includes(role);
       const haidHtml = gender === 'P' ? `<div class="bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/40 p-3.5 rounded-2xl flex justify-between items-center mb-3"><span class="text-xs font-bold text-rose-700 dark:text-rose-400 flex items-center gap-2"><i class="fa-solid fa-droplet"></i> Sedang Haid (Udzur Syar'i)</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="toggleHaid" class="sr-only peer" onchange="handleHaidToggle()"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-rose-500"></div></label></div>` : '';
+
+      // Rawatib muakkad: muncul di bawah shalat wajib yang sesuai saat diceklis
+      const rawatibMap = {
+        f_shubuh:  [{ id: 'f_rawatib_shubuh_qab',  label: 'Qabliyah Shubuh (2 rkt)' }],
+        f_dzuhur:  [{ id: 'f_rawatib_dzuhur_qab',  label: 'Qabliyah Dzuhur (4 rkt)' }, { id: 'f_rawatib_dzuhur_bad', label: "Ba'diyah Dzuhur (2 rkt)" }],
+        f_ashar:   [],
+        f_maghrib: [{ id: 'f_rawatib_maghrib_bad', label: "Ba'diyah Maghrib (2 rkt)" }],
+        f_isya:    [{ id: 'f_rawatib_isya_bad',    label: "Ba'diyah Isya (2 rkt)" }],
+      };
+
       const shalatList = [{ id: 'f_shubuh', label: 'Shubuh', point: 10 },{ id: 'f_dzuhur', label: 'Dzuhur', point: 10 },{ id: 'f_ashar', label: 'Ashar', point: 10 },{ id: 'f_maghrib', label: 'Maghrib', point: 10 },{ id: 'f_isya', label: 'Isya', point: 10 }];
-      const shalatBox = `<div class="bg-white dark:bg-[#111827] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm mb-3"><div class="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-1.5"><i class="fa-solid fa-mosque"></i> Shalat Fardhu 5 Waktu</div><div class="grid grid-cols-1 sm:grid-cols-5 gap-2">${shalatList.map(s => `<div class="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800"><span class="text-xs font-semibold text-slate-700 dark:text-slate-200">${esc(s.label)}</span><input type="checkbox" id="${s.id}" data-point="${s.point}" class="cb-hitung w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500" onchange="calculatePoints()"></div>`).join('')}</div></div>`;
-      const otherList = isStaff ? [{ id: 'f_dzikir', label: 'Dzikir Pagi & Petang' },{ id: 'f_tilawah_2lbr', label: 'Tilawah Minimal 2 Lembar' },{ id: 'f_mujahadah', label: 'Mujahadah Mandiri' }] : [{ id: 'f_bantuOrtu', label: 'Membantu Orang Tua', point: 10 },{ id: 'f_bijakHP', label: 'Bijak Gadget (< 2 Jam)', point: 10 },{ id: 'f_belajar', label: 'Murajaah / Belajar Mandiri', point: 10 },{ id: 'f_tidur', label: 'Tidur Awal (< Jam 22.00)', point: 10 },{ id: 'f_tilawah', label: 'Tilawah Al-Quran', point: 20 }];
+      const shalatCards = shalatList.map(s => {
+        const rList = rawatibMap[s.id] || [];
+        const rawatibHtml = rList.length ? `<div id="rawatib_${s.id}" class="hidden mt-1.5 pl-1 space-y-1">${rList.map(r => `<div class="flex items-center justify-between px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg border border-emerald-100 dark:border-emerald-900/40"><span class="text-[11px] font-medium text-emerald-700 dark:text-emerald-400"><i class="fa-solid fa-angles-right text-[9px] mr-1 opacity-60"></i>${esc(r.label)}</span><input type="checkbox" id="${r.id}" class="w-3.5 h-3.5 text-emerald-600 rounded focus:ring-emerald-500 accent-emerald-600"></div>`).join('')}</div>` : '';
+        return `<div><div class="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800"><span class="text-xs font-semibold text-slate-700 dark:text-slate-200">${esc(s.label)}</span><input type="checkbox" id="${s.id}" data-point="${s.point}" class="cb-hitung w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500" onchange="toggleRawatib('${s.id}')"></div>${rawatibHtml}</div>`;
+      }).join('');
+      const shalatBox = `<div class="bg-white dark:bg-[#111827] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm mb-3"><div class="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-1.5"><i class="fa-solid fa-mosque"></i> Shalat Fardhu &amp; Rawatib Muakkad</div><div class="grid grid-cols-1 sm:grid-cols-5 gap-2">${shalatCards}</div></div>`;
+
+      const otherList = isStaff
+        ? [
+            { id: 'f_dzikir',        label: 'Dzikir Pagi & Petang' },
+            { id: 'f_tilawah_5lbr',  label: 'Tilawah Minimal 5 Lembar' },
+            { id: 'f_qiyamullail',   label: 'Qiyamullail (Mendoakan Kebaikan untuk Yayasan)' },
+            { id: 'f_ibadah_sunnah', label: 'Ibadah Sunnah (Dhuha / Puasa Sunnah / Infaq)' }
+          ]
+        : [
+            { id: 'f_bantuOrtu', label: 'Membantu Orang Tua', point: 10 },
+            { id: 'f_bijakHP',   label: 'Bijak Gadget (< 2 Jam)', point: 10 },
+            { id: 'f_belajar',   label: 'Murajaah / Belajar Mandiri', point: 10 },
+            { id: 'f_tidur',     label: 'Tidur Awal (< Jam 22.00)', point: 10 },
+            { id: 'f_tilawah',   label: 'Tilawah Al-Quran', point: 20 }
+          ];
       let html = haidHtml + shalatBox + `<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-1 mb-1.5">Amalan Harian Lainnya</div>`;
       html += otherList.map(i => cardCb(i.id, i.label, i.point)).join('');
       container.innerHTML = html;
       calculatePoints();
+    }
+
+    // Tampilkan/sembunyikan rawatib muakkad saat shalat wajib diceklis/unceklis
+    function toggleRawatib(shalatId) {
+      calculatePoints();
+      const el = $(shalatId);
+      const box = $('rawatib_' + shalatId);
+      if (!box) return;
+      if (!el || !el.checked) {
+        box.querySelectorAll('input[type="checkbox"]').forEach(c => { c.checked = false; });
+        box.classList.add('hidden');
+      } else {
+        box.classList.remove('hidden');
+      }
     }
 
     function cardCb(id, label, point) {
@@ -1173,7 +1229,17 @@
     function handleHaidToggle() {
       const toggle = $('toggleHaid'); if (!toggle) return;
       appState.isHaid = toggle.checked;
-      SHALAT_IDS.forEach(id => { const el = $(id); if (el) { el.checked = appState.isHaid; el.disabled = appState.isHaid; } });
+      SHALAT_IDS.forEach(id => {
+        const el = $(id); if (el) { el.checked = appState.isHaid; el.disabled = appState.isHaid; }
+        // Sembunyikan rawatib saat haid
+        const box = $('rawatib_' + id);
+        if (box) {
+          if (appState.isHaid) {
+            box.querySelectorAll('input[type="checkbox"]').forEach(c => { c.checked = false; });
+            box.classList.add('hidden');
+          }
+        }
+      });
       calculatePoints();
     }
     function calculatePoints() {
@@ -1196,11 +1262,19 @@
       const role = getEffectiveRole(); const nama = getEffectiveName();
       const isStaff = STAFF_ROLES.includes(role);
       const payload = { role, nama, tanggal, catatan: $('catatanForm').value, isHaid: appState.isHaid ? 'Ya' : 'Tidak' };
-      ['shubuh','dzuhur','ashar','maghrib','isya'].forEach(k => { const el = $(`f_${k}`); payload[k] = el && el.checked ? 'Ya' : 'Tidak'; });
+      const cb = id => { const el = $(id); return el && el.checked ? 'Ya' : 'Tidak'; };
+      ['shubuh','dzuhur','ashar','maghrib','isya'].forEach(k => { payload[k] = cb(`f_${k}`); });
+      // Rawatib muakkad (semua role)
+      payload.rawatib_shubuh_qab  = cb('f_rawatib_shubuh_qab');
+      payload.rawatib_dzuhur_qab  = cb('f_rawatib_dzuhur_qab');
+      payload.rawatib_dzuhur_bad  = cb('f_rawatib_dzuhur_bad');
+      payload.rawatib_maghrib_bad = cb('f_rawatib_maghrib_bad');
+      payload.rawatib_isya_bad    = cb('f_rawatib_isya_bad');
       if (isStaff) {
-        payload.dzikir = $('f_dzikir') && $('f_dzikir').checked ? 'Ya' : 'Tidak';
-        payload.tilawah_2lbr = $('f_tilawah_2lbr') && $('f_tilawah_2lbr').checked ? 'Ya' : 'Tidak';
-        payload.mujahadah_mandiri = $('f_mujahadah') && $('f_mujahadah').checked ? 'Ya' : 'Tidak';
+        payload.dzikir        = cb('f_dzikir');
+        payload.tilawah_5lbr  = cb('f_tilawah_5lbr');
+        payload.qiyamullail   = cb('f_qiyamullail');
+        payload.ibadah_sunnah = cb('f_ibadah_sunnah');
       } else {
         payload.kelas = getEffectiveKelas();
         payload.totalPoin = $('liveScore').innerText;
@@ -1232,6 +1306,10 @@
 
     function resetForm(resetHaid = true) {
       document.querySelectorAll('#formChecklist input[type="checkbox"]').forEach(c => { c.checked = false; c.disabled = false; });
+      // Sembunyikan semua rawatib boxes
+      ['f_shubuh','f_dzuhur','f_ashar','f_maghrib','f_isya'].forEach(id => {
+        const box = $('rawatib_' + id); if (box) box.classList.add('hidden');
+      });
       $('catatanForm').value = '';
       if (resetHaid) appState.isHaid = false;
       const t = $('toggleHaid'); if (t) t.checked = false;
