@@ -595,10 +595,11 @@
 
   <script>
     // ============================================================
-    // KONFIGURASI BACKEND (Cloudflare Worker)
+    // KONFIGURASI BACKEND
     // ============================================================
-    // Ganti dengan URL Worker setelah `wrangler deploy`
-    const WORKER_URL = 'https://mutabaah-api.YOUR_SUBDOMAIN.workers.dev';
+    // Saat ini menggunakan Google Apps Script. Ganti ke WORKER_URL setelah deploy Cloudflare Worker.
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbw-SQoNpwzi4olglFMIc_Bs5zAyCvhIurbfaXJZhehGdeaH4mP5_H5AlFYCzyisDSgR/exec';
+    // const WORKER_URL = 'https://mutabaah-api.YOUR_SUBDOMAIN.workers.dev'; // aktifkan setelah wrangler deploy
 
     const $ = id => document.getElementById(id);
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -636,13 +637,15 @@
 
     async function gsRun(fn, ...args) {
       const params = buildParams(fn, args);
-      const res = await fetch(WORKER_URL, {
+      const res = await fetch(GAS_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        // KUNCI CORS: Harus text/plain agar Google tidak memblokir Preflight OPTIONS
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: fn, params })
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return res.json();
+      const text = await res.text();
+      return JSON.parse(text);
     }
 
     // ============================================================
