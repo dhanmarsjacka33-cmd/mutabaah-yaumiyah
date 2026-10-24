@@ -560,8 +560,8 @@
     // ============================================================
     // KONFIGURASI GOOGLE APPS SCRIPT
     // ============================================================
-    // PASTIKAN URL DI BAWAH INI ADALAH URL WEB APP DARI CODE.GS ANDA YANG BERAKHIRAN /exec
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycb.../exec'; 
+    // GANTI URL DI BAWAH INI DENGAN URL WEB APP DARI CODE.GS ANDA (HARUS BERAKHIRAN /exec)
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbw-SQoNpwzi4olglFMIc_Bs5zAyCvhIurbfaXJZhehGdeaH4mP5_H5AlFYCzyisDSgR/exec'; 
 
     const $ = id => document.getElementById(id);
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -595,7 +595,7 @@
       }
     }
 
-        async function gsRun(fn, ...args) {
+    async function gsRun(fn, ...args) {
       const params = buildParams(fn, args);
       try {
         const res = await fetch(GAS_URL, {
@@ -621,6 +621,7 @@
         throw error;
       }
     }
+
     let appState = {
       userRole: null, userName: null, username: null,
       kelasBinaan: [], gender: 'L', isHaid: false, source: null,
@@ -864,7 +865,7 @@
       await loadPersonalHistoryChart();
     }
 
-        async function loadExistingEntry() {
+    async function loadExistingEntry() {
       const tanggal = $('tglInput').value;
       if (!tanggal) return;
       const nama = getEffectiveName(); const role = getEffectiveRole();
@@ -874,26 +875,20 @@
         if (res && res.found) {
           const e = res.entry;
           const setCb = (id, v) => { const el = $(id); if (el) el.checked = (v === 'Ya'); };
+          setCb('f_shubuh', e.Shubuh); setCb('f_dzuhur', e.Dzuhur); setCb('f_ashar', e.Ashar); setCb('f_maghrib', e.Maghrib); setCb('f_isya', e.Isya);
           
-          setCb('f_shubuh', e.Shubuh); setCb('f_dzuhur', e.Dzuhur); 
-          setCb('f_ashar', e.Ashar); setCb('f_maghrib', e.Maghrib); setCb('f_isya', e.Isya);
-          
-          // Rawatib
           setCb('f_rawatib_shubuh_qab', e.RawatibShubuhQab);
           setCb('f_rawatib_dzuhur_qab', e.RawatibDzuhurQab);
           setCb('f_rawatib_dzuhur_bad', e.RawatibDzuhurBad);
           setCb('f_rawatib_maghrib_bad', e.RawatibMaghribBad);
           setCb('f_rawatib_isya_bad', e.RawatibIsyaBad);
 
-          // Amalan Lain (Guru)
           setCb('f_dzikir', e.Dzikir); 
           setCb('f_tilawah_5lbr', e.Tilawah5Lbr); 
           setCb('f_qiyamullail', e.Qiyamullail); 
           setCb('f_ibadah_sunnah', e.IbadahSunnah);
           
-          // Amalan Lain (Siswa)
-          setCb('f_bantuOrtu', e.BantuOrtu); setCb('f_bijakHP', e.BijakHP); 
-          setCb('f_belajar', e.Belajar); setCb('f_tidur', e.Tidur); setCb('f_tilawah', e.Tilawah);
+          setCb('f_bantuOrtu', e.BantuOrtu); setCb('f_bijakHP', e.BijakHP); setCb('f_belajar', e.Belajar); setCb('f_tidur', e.Tidur); setCb('f_tilawah', e.Tilawah);
           
           const hd = $('toggleHaid');
           if (hd && e.Haid === 'Ya') { hd.checked = true; handleHaidToggle(); }
@@ -902,6 +897,7 @@
         }
       } catch (e) {}
     }
+
     function goNextStudent() {
       const sel = $('fillForNama');
       const opts = Array.from(sel.options).filter(o => o.value && o.value !== '__self__');
@@ -1178,29 +1174,22 @@
       const scoreEl = $('liveScore'); if (scoreEl) scoreEl.innerText = total;
     }
 
-        async function submitForm() {
+    async function submitForm() {
       const btn = $('btnSubmitForm'); const originalHtml = btn.innerHTML;
       const tanggal = $('tglInput').value;
       if (!tanggal) return showToast('Tanggal tidak valid.', 'error');
       const role = getEffectiveRole(); const nama = getEffectiveName();
       const isStaff = STAFF_ROLES.includes(role);
-      
       const payload = { role, nama, tanggal, catatan: $('catatanForm').value, isHaid: appState.isHaid ? 'Ya' : 'Tidak' };
       
-      // Shalat Fardhu
-      ['shubuh','dzuhur','ashar','maghrib','isya'].forEach(k => { 
-        const el = $(`f_${k}`); 
-        payload[k] = el && el.checked ? 'Ya' : 'Tidak'; 
-      });
+      ['shubuh','dzuhur','ashar','maghrib','isya'].forEach(k => { const el = $(`f_${k}`); payload[k] = el && el.checked ? 'Ya' : 'Tidak'; });
       
-      // Rawatib (Wajib dikirim ke backend)
       payload.rawatib_shubuh_qab = $('f_rawatib_shubuh_qab') && $('f_rawatib_shubuh_qab').checked ? 'Ya' : 'Tidak';
       payload.rawatib_dzuhur_qab = $('f_rawatib_dzuhur_qab') && $('f_rawatib_dzuhur_qab').checked ? 'Ya' : 'Tidak';
       payload.rawatib_dzuhur_bad = $('f_rawatib_dzuhur_bad') && $('f_rawatib_dzuhur_bad').checked ? 'Ya' : 'Tidak';
       payload.rawatib_maghrib_bad = $('f_rawatib_maghrib_bad') && $('f_rawatib_maghrib_bad').checked ? 'Ya' : 'Tidak';
       payload.rawatib_isya_bad = $('f_rawatib_isya_bad') && $('f_rawatib_isya_bad').checked ? 'Ya' : 'Tidak';
 
-      // Amalan Lain (Guru vs Siswa)
       if (isStaff) {
         payload.dzikir = $('f_dzikir') && $('f_dzikir').checked ? 'Ya' : 'Tidak';
         payload.tilawah_5lbr = $('f_tilawah_5lbr') && $('f_tilawah_5lbr').checked ? 'Ya' : 'Tidak';
@@ -1221,7 +1210,6 @@
         localStorage.setItem('myq_queue', JSON.stringify(appState.offlineQueue));
         showToast('Tersimpan offline di HP.', 'warning'); resetForm(); return;
       }
-      
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...'; btn.disabled = true;
       try {
         const res = await gsRun('submitMutabaah', payload);
@@ -1236,6 +1224,7 @@
         showToast('Server tidak merespon. Data disimpan offline.', 'warning'); resetForm();
       } finally { btn.innerHTML = originalHtml; btn.disabled = false; }
     }
+
     function resetForm(resetHaid = true) {
       document.querySelectorAll('#formChecklist input[type="checkbox"]').forEach(c => { c.checked = false; c.disabled = false; });
       $('catatanForm').value = '';
@@ -1326,7 +1315,6 @@
               <td class="p-3 text-slate-500">${esc(new Date(r.tgl).toLocaleDateString('id-ID'))}</td>
               <td class="p-3">${renderNameClickable(r.nama, 'guru')}</td>
               ${(r.cols || []).map((c, idx) => {
-                // Gabungkan 5 rawatib (indeks 6 s/d 10) ke satu kolom
                 if (idx >= 6 && idx <= 10) return '';
                 if (idx === 11) {
                   const rawatibCount = r.cols.slice(6, 11).filter(x => x === 'Ya').length;
@@ -1514,9 +1502,7 @@
           const badge = s.sudah ? '<span class="text-emerald-600 font-bold"><i class="fa-solid fa-check"></i> Sudah</span>' : '<span class="text-rose-500 font-bold"><i class="fa-solid fa-xmark"></i> Belum</span>';
           const rowBg = s.sudah ? '' : 'bg-rose-50/40 dark:bg-rose-950/10';
           const safeJs = JSON.stringify(s.nama).replace(/"/g, '&quot;');
-          // Perbaikan: gunakan 's.nama' bukan 's.nama', karena backend mengembalikan 'nama' bukan 'nama'
           html += `<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 ${rowBg}"><td class="p-3 text-slate-400">${i + 1}</td><td class="p-3 font-bold"><button onclick="showStudentHistory(${safeJs}, 'siswa')" class="hover:text-emerald-600">${esc(s.nama)} <i class="fa-solid fa-clock-rotate-left text-[9px] opacity-50"></i></button></td><td class="p-3">${esc(s.kelas || '-')}</td><td class="p-3 text-center">${badge}</td><td class="p-3 text-center font-extrabold text-emerald-600">${s.sudah ? (res.lastStatusData && res.lastStatusData.data ? 0 : 0) : '-'}</td></tr>`;
-          // Catatan: backend versi baru tidak mengembalikan poin di list status, kita bisa biarkan '-' atau 0. Jika ingin poin, backend harus diubah. Saya biarkan logic lama berjalan (jika ada).
         });
         html += '</tbody></table></div>';
         $('statusList').innerHTML = html;
@@ -1600,7 +1586,7 @@
       openModal('studentModal');
       $('searchStudentModal').value = '';
       try {
-        const students = await gsRun('getStudentsForBulk'); // Menggunakan getStudentsForBulk karena getStudents tidak ada di code.gs baru
+        const students = await gsRun('getStudentsForBulk');
         appState.allStudentsCache = students || [];
         $('studentTableBody').innerHTML = (students || []).map(s => `<tr><td class="p-2"><b>${esc(s.nama)}</b><span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 ml-1">siswa</span><br><span class="text-[10px] text-slate-400">NIS ${esc(s.username)} · ${esc(s.kelas || '-')} · ${esc(s.gender)}</span></td><td class="p-2 text-right"><button onclick="confirmDelStudent('${esc(s.username)}')" class="text-rose-500"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('') || '<tr><td colspan="2" class="text-center p-3 text-slate-400 text-xs">Belum ada akun siswa.</td></tr>';
       } catch (e) {}
