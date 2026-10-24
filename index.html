@@ -2,7 +2,7 @@
 <html lang="id" class="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Mutabaah Yaumiyah | Portal Ibadah</title>
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -595,10 +595,10 @@
 
   <script>
     // ============================================================
-    // KONFIGURASI GOOGLE APPS SCRIPT
+    // KONFIGURASI BACKEND (Cloudflare Worker)
     // ============================================================
-    // GANTI URL DI BAWAH INI DENGAN URL WEB APP DARI CODE.GS ANDA
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbw-SQoNpwzi4olglFMIc_Bs5zAyCvhIurbfaXJZhehGdeaH4mP5_H5AlFYCzyisDSgR/exec'; 
+    // Ganti dengan URL Worker setelah `wrangler deploy`
+    const WORKER_URL = 'https://mutabaah-api.YOUR_SUBDOMAIN.workers.dev';
 
     const $ = id => document.getElementById(id);
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -628,21 +628,21 @@
         case 'changeOwnPin': return { username: args[0], oldPin: args[1], newPin: args[2] };
         case 'exportReportCSV': return { kelasFilter: args[0], genderFilter: args[1], startDate: args[2], endDate: args[3], roleTarget: args[4], searchQuery: args[5] };
         case 'getPrayerTimes': return { city: args[0], country: args[1] };
+        case 'getStreakLeaderboard': return {};
+        case 'getStudentsForBulk': return {};
         default: return {};
       }
     }
 
     async function gsRun(fn, ...args) {
       const params = buildParams(fn, args);
-      const res = await fetch(GAS_URL, {
+      const res = await fetch(WORKER_URL, {
         method: 'POST',
-        // KUNCI CORS: Harus text/plain agar Google tidak memblokir Preflight OPTIONS
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: fn, params })
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const text = await res.text();
-      return JSON.parse(text);
+      return res.json();
     }
 
     // ============================================================
