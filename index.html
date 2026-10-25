@@ -6,17 +6,34 @@
   <title>Mutabaah Yaumiyah | Portal Ibadah</title>
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- 1. PRECONNECT: Mempercepat koneksi DNS/TLS ke server CDN -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <!-- 2. NON-BLOCKING CSS: FontAwesome dimuat secara asinkron agar tidak memblokir render -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
+  <!-- 3. GOOGLE FONTS: Menggunakan display=swap agar teks langsung tampil -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- 4. TAILWIND PLAY CDN (Sinkron) -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] } } } }
   </script>
+
+  <!-- 5. CRITICAL CSS: Mencegah layar berkedip putih (FOUC) selama Tailwind loading -->
   <style>
     body { transition: background-color 0.25s ease, color 0.25s ease; -webkit-tap-highlight-color: transparent; }
+    /* Fallback warna agar LCP (Largest Contentful Paint) langsung terlihat */
+    body { background-color: #f8fafc; color: #0f172a; }
+    html.dark body { background-color: #0b0f19; color: #f1f5f9; }
+    
     .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-top: 1px solid rgba(226, 232, 240, 0.8); }
     .dark .glass-nav { background: rgba(15, 23, 42, 0.85); border-top: 1px solid rgba(51, 65, 85, 0.6); }
     .modal-overlay { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
@@ -556,12 +573,14 @@
 
   <div id="toast" class="fixed top-16 right-4 p-3.5 rounded-xl shadow-lg text-white font-semibold text-xs transition-all duration-300 transform translate-x-10 opacity-0 pointer-events-none z-[100] flex items-center gap-2.5"></div>
 
+  <!-- Memuat Chart.js di akhir agar tidak memblokir render (defer) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+
   <script>
     // ============================================================
     // KONFIGURASI GOOGLE APPS SCRIPT
     // ============================================================
-    // GANTI URL DI BAWAH INI DENGAN URL WEB APP DARI CODE.GS ANDA (HARUS BERAKHIRAN /exec)
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycb.../exec'; 
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycb.../exec'; // GANTI DENGAN URL ANDA
 
     const $ = id => document.getElementById(id);
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -600,22 +619,14 @@
       try {
         const res = await fetch(GAS_URL, {
           method: 'POST',
-          // KUNCI 1: text/plain agar browser tidak memicu preflight CORS
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          // KUNCI 2: redirect follow karena GAS melakukan redirect internal
           redirect: 'follow',
           body: JSON.stringify({ action: fn, params })
         });
-        
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        
         const text = await res.text();
-        try {
-          return JSON.parse(text);
-        } catch (e) {
-          console.error('Response bukan JSON:', text.substring(0, 200));
-          throw new Error('Gagal parse JSON. Pastikan URL /exec benar dan akses Anyone.');
-        }
+        try { return JSON.parse(text); } 
+        catch (e) { throw new Error('Gagal parse JSON. Pastikan URL /exec benar dan akses Anyone.'); }
       } catch (error) {
         console.error(`[Fetch Error: ${fn}]`, error);
         throw error;
@@ -811,7 +822,6 @@
         appState.fillForList = list;
         const jenjangSet = new Set();
         
-        // Deteksi jenjang yang lebih toleran (mendeteksi awalan angka)
         list.forEach(s => {
           (s.kelas || '').split(/[,;]+/).forEach(k => {
             const kk = k.trim();
