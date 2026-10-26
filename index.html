@@ -2,18 +2,22 @@
 <html lang="id" class="light">
 <head>
   <meta charset="UTF-8">
-  <!-- PERBAIKAN 1: Menghapus user-scalable=no dan maximum-scale agar bisa di-zoom -->
+  <!-- PERBAIKAN AKSESIBILITAS: Menghapus user-scalable=no agar bisa di-zoom -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Mutabaah Yaumiyah | Portal Ibadah</title>
+  <!-- PERBAIKAN SEO: Menambahkan meta description -->
+  <meta name="description" content="Aplikasi monitoring ibadah harian (Mutabaah Yaumiyah) untuk siswa dan guru. Pantau shalat, tilawah, dan amalan harian lainnya.">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   
+  <!-- Preconnect untuk mempercepat koneksi ke CDN -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
+  <!-- FontAwesome non-blocking -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
@@ -48,8 +52,8 @@
 
   <header class="bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 px-5 py-4 sticky top-0 z-40 flex justify-between items-center transition-colors">
     <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-emerald-700 dark:bg-emerald-600/20 flex items-center justify-center text-white dark:text-emerald-400 font-bold shadow-sm">
-        <i class="fa-solid fa-mosque text-sm"></i>
+      <div class="w-9 h-9 rounded-xl bg-emerald-700 dark:bg-emerald-500/20 flex items-center justify-center text-white dark:text-emerald-400 font-bold shadow-sm">
+        <i class="fa-solid fa-mosque text-sm" aria-hidden="true"></i>
       </div>
       <div>
         <h1 class="text-base font-bold tracking-tight text-slate-900 dark:text-white leading-tight">Mutabaah Yaumiyah</h1>
@@ -85,7 +89,6 @@
       </div>
       <div class="space-y-4">
         <div>
-          <!-- PERBAIKAN 3: Menambahkan for dan aria-label -->
           <label for="loginUser" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5">Username / NISN</label>
           <input type="text" id="loginUser" aria-label="Username atau NISN" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm font-medium transition" placeholder="Contoh: admin">
         </div>
@@ -93,7 +96,7 @@
           <label for="loginPin" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5">PIN Akses</label>
           <input type="password" id="loginPin" aria-label="PIN Akses" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm font-medium transition" placeholder="••••">
         </div>
-        <!-- PERBAIKAN 2: Mengubah bg-emerald-600 menjadi bg-emerald-700 -->
+        <!-- PERBAIKAN KONTRAS: bg-emerald-700 -->
         <button onclick="handleLogin()" id="btnMasuk" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3 rounded-xl shadow-sm transition active:scale-[0.99] text-sm mt-2">
           Masuk ke Portal
         </button>
@@ -130,7 +133,8 @@
         <div class="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-500 flex items-center gap-1.5">
           <i class="fa-solid fa-clock" aria-hidden="true"></i> Jadwal Shalat (Standar Kemenag RI)
         </div>
-        <span class="text-[10px] text-slate-500 font-medium">WIB</span>
+        <!-- PERBAIKAN KONTRAS: dark:text-slate-400 -->
+        <span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">WIB</span>
       </div>
       <div id="prayerScheduleWidget" class="grid grid-cols-5 gap-1.5 text-center">
         <div class="p-2 rounded-xl bg-slate-50 dark:bg-slate-900 animate-pulse"><span class="block text-[10px] text-slate-500">Subuh</span><span class="text-xs font-bold">-:--</span></div>
@@ -172,7 +176,8 @@
     <div class="bg-white dark:bg-[#111827] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
       <div class="flex justify-between items-center mb-2">
         <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"><i class="fa-solid fa-chart-column mr-1.5 text-emerald-700 dark:text-emerald-500" aria-hidden="true"></i> Progres Mandiri (7 Hari)</span>
-        <span class="text-[10px] text-slate-500 font-medium">Tren Ibadah</span>
+        <!-- PERBAIKAN KONTRAS: dark:text-slate-400 -->
+        <span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Tren Ibadah</span>
       </div>
       <div class="relative w-full h-32">
         <canvas id="personalChart"></canvas>
@@ -191,7 +196,7 @@
         <textarea id="catatanForm" aria-label="Catatan Tambahan" rows="2" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Keterangan uzur atau kondisi khusus..."></textarea>
       </div>
 
-      <!-- PERBAIKAN 2: Mengubah bg-emerald-600 menjadi bg-emerald-700 -->
+      <!-- PERBAIKAN KONTRAS: bg-emerald-700 -->
       <button onclick="submitForm()" id="btnSubmitForm" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3.5 rounded-xl shadow-sm transition active:scale-[0.99] text-sm flex items-center justify-center gap-2">
         <i class="fa-solid fa-paper-plane text-xs" aria-hidden="true"></i> Simpan Mutabaah
       </button>
@@ -343,7 +348,8 @@
 
   <nav id="bottomNav" class="hidden fixed bottom-0 w-full glass-nav z-50 no-print">
     <div class="flex justify-around items-center h-16 max-w-md mx-auto px-4">
-      <button id="navFormBtn" onclick="switchView('Form')" class="flex flex-col items-center justify-center w-full h-full text-emerald-700 border-t-2 border-emerald-700 transition">
+      <!-- PERBAIKAN KONTRAS: text-emerald-600 dark:text-emerald-400 -->
+      <button id="navFormBtn" onclick="switchView('Form')" class="flex flex-col items-center justify-center w-full h-full text-emerald-600 dark:text-emerald-400 border-t-2 border-emerald-600 dark:border-emerald-400 transition">
         <i class="fa-solid fa-pen-to-square text-lg mb-0.5" aria-hidden="true"></i>
         <span class="text-[10px] font-bold tracking-wide">Formulir</span>
       </button>
@@ -571,10 +577,15 @@
 
   <div id="toast" class="fixed top-16 right-4 p-3.5 rounded-xl shadow-lg text-white font-semibold text-xs transition-all duration-300 transform translate-x-10 opacity-0 pointer-events-none z-[100] flex items-center gap-2.5"></div>
 
+  <!-- Memuat Chart.js di akhir agar tidak memblokir render (defer) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
   <script>
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycb.../exec'; // GANTI DENGAN URL ANDA
+    // ============================================================
+    // KONFIGURASI GOOGLE APPS SCRIPT
+    // ============================================================
+    // PERBAIKAN FATAL: GANTI URL DI BAWAH INI DENGAN URL WEB APP ANDA YANG ASLI (BERAKHIRAN /exec)
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbw-SQoNpwzi4olglFMIc_Bs5zAyCvhIurbfaXJZhehGdeaH4mP5_H5AlFYCzyisDSgR/exec'; 
 
     const $ = id => document.getElementById(id);
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -690,7 +701,7 @@
       const widget = $('prayerScheduleWidget');
       if (!widget) return;
       const items = [['Subuh',t.Fajr],['Dzuhur',t.Dhuhr],['Ashar',t.Asr],['Maghrib',t.Maghrib],['Isya',t.Isha]];
-      widget.innerHTML = items.map(([label,time]) => `<div class="p-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800"><span class="block text-[10px] text-slate-500 font-medium">${esc(label)}</span><span class="text-xs font-bold text-slate-700 dark:text-slate-200">${esc(time)}</span></div>`).join('');
+      widget.innerHTML = items.map(([label,time]) => `<div class="p-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800"><span class="block text-[10px] text-slate-500 dark:text-slate-400 font-medium">${esc(label)}</span><span class="text-xs font-bold text-slate-700 dark:text-slate-200">${esc(time)}</span></div>`).join('');
     }
 
     function toggleDarkMode() {
@@ -768,7 +779,7 @@
       });
       $('btnTabLB').className = "px-4 py-2.5 font-bold text-xs text-emerald-700 border-b-2 border-emerald-700 whitespace-nowrap transition";
       const fBtn = $('navFormBtn'); const dBtn = $('navDashBtn');
-      if (fBtn) fBtn.className = "flex flex-col items-center justify-center w-full h-full text-emerald-700 border-t-2 border-emerald-700 transition";
+      if (fBtn) fBtn.className = "flex flex-col items-center justify-center w-full h-full text-emerald-600 dark:text-emerald-400 border-t-2 border-emerald-600 dark:border-emerald-400 transition";
       if (dBtn) dBtn.className = "flex flex-col items-center justify-center w-full h-full text-slate-500 hover:text-slate-700 transition";
       ['classModal','studentModal','teacherModal','alertModal','pinModal','historyModal','bulkModal','profileModal','notifModal'].forEach(id => { const el = $(id); if (el) el.classList.add('hidden'); });
       showToast('Anda telah keluar dari portal.');
@@ -1098,7 +1109,7 @@
       $('view-main').classList.add('hidden'); $('view-dashboard').classList.add('hidden');
       const fBtn = $('navFormBtn'), dBtn = $('navDashBtn');
       const inactive = "flex flex-col items-center justify-center w-full h-full text-slate-500 hover:text-slate-700 transition";
-      const active = "flex flex-col items-center justify-center w-full h-full text-emerald-700 border-t-2 border-emerald-700 transition";
+      const active = "flex flex-col items-center justify-center w-full h-full text-emerald-600 dark:text-emerald-400 border-t-2 border-emerald-600 dark:border-emerald-400 transition";
       if (fBtn) fBtn.className = inactive;
       if (dBtn) dBtn.className = inactive;
       if (target === 'Form') {
@@ -1153,7 +1164,6 @@
         <div class="bg-white dark:bg-[#111827] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm mb-3">
           <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-500 mb-3 flex items-center gap-1.5"><i class="fa-solid fa-mosque" aria-hidden="true"></i> Shalat Fardhu 5 Waktu</div>
           <div class="grid grid-cols-1 sm:grid-cols-5 gap-2">
-            <!-- PERBAIKAN 3: Wrap dengan label dan tambahkan for -->
             ${shalatList.map(s => `<label for="${s.id}" class="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 cursor-pointer"><span class="text-xs font-semibold text-slate-700 dark:text-slate-200">${esc(s.label)}</span><input type="checkbox" id="${s.id}" data-point="${s.point}" class="cb-hitung w-4 h-4 text-emerald-700 rounded focus:ring-emerald-500"></label>`).join('')}
           </div>
         </div>`;
@@ -1186,13 +1196,12 @@
         { id: 'f_tilawah', label: 'Tilawah Al-Quran', point: 20 }
       ];
       
-      let html = haidHtml + shalatBox + rawatibBox + `<div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-1 mb-1.5">Amalan Harian Lainnya</div>`;
+      let html = haidHtml + shalatBox + rawatibBox + `<div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 px-1 mb-1.5">Amalan Harian Lainnya</div>`;
       html += otherList.map(i => cardCb(i.id, i.label, i.point)).join('');
       container.innerHTML = html;
       calculatePoints();
     }
 
-    // PERBAIKAN 3: Mengganti div terluar dengan label dan menambahkan for
     function cardCb(id, label, point) {
       const attr = point ? `data-point="${point}" class="cb-hitung sr-only peer"` : `class="sr-only peer"`;
       return `<label for="${id}" class="flex items-center justify-between p-3.5 bg-white dark:bg-[#111827] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer">
@@ -1307,7 +1316,7 @@
       const contentMap = { tabLeaderboard: 'contentLeaderboard', tabStreak: 'contentStreak', tabCompare: 'contentCompare', tabSiswa: 'contentSiswa', tabGuru: 'contentGuru', tabStatus: 'contentStatus' };
       const btnMap = { tabLeaderboard: 'btnTabLB', tabStreak: 'btnTabStreak', tabCompare: 'btnTabCompare', tabSiswa: 'btnTabSiswa', tabGuru: 'btnTabGuru', tabStatus: 'btnTabStatus' };
       Object.values(contentMap).forEach(id => $(id).classList.add('hidden'));
-      Object.values(btnMap).forEach(id => { const el = $(id); if (el) el.className = "px-4 py-2.5 font-bold text-xs text-slate-500 whitespace-nowrap transition"; });
+      Object.values(btnMap).forEach(id => { const el = $(id); if (el) el.className = "px-4 py-2.5 font-bold text-xs text-slate-600 whitespace-nowrap transition"; });
       const ab = $(btnMap[tabId]); if (ab) ab.className = "px-4 py-2.5 font-bold text-xs text-emerald-700 border-b-2 border-emerald-700 whitespace-nowrap transition";
       const ac = $(contentMap[tabId]); if (ac) ac.classList.remove('hidden');
       const showFilter = ['tabSiswa','tabGuru'].includes(tabId);
@@ -1348,7 +1357,7 @@
         if (tab === 'tabSiswa' && roleTarget === 'siswa') {
           $('tableBodySiswa').innerHTML = ((res && res.table) || []).map(r => `
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50">
-              <td class="p-3 text-slate-600">${esc(new Date(r.tgl).toLocaleDateString('id-ID'))}</td>
+              <td class="p-3 text-slate-500">${esc(new Date(r.tgl).toLocaleDateString('id-ID'))}</td>
               <td class="p-3">${renderNameClickable(r.nama, 'siswa')}</td>
               <td class="p-3">${esc(r.kelas)}</td>
               <td class="p-3 font-extrabold text-emerald-700 text-center">${esc(r.poin)}</td>
@@ -1358,7 +1367,7 @@
         } else if (tab === 'tabGuru' && roleTarget === 'guru') {
           $('tableBodyGuru').innerHTML = ((res && res.table) || []).map(r => `
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50">
-              <td class="p-3 text-slate-600">${esc(new Date(r.tgl).toLocaleDateString('id-ID'))}</td>
+              <td class="p-3 text-slate-500">${esc(new Date(r.tgl).toLocaleDateString('id-ID'))}</td>
               <td class="p-3">${renderNameClickable(r.nama, 'guru')}</td>
               ${(r.cols || []).map((c, idx) => {
                 if (idx >= 6 && idx <= 10) return '';
@@ -1419,7 +1428,7 @@
           const tglFmt = new Date(d.tgl).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' });
           const poinStr = d.isTeacher ? '' : `<span class="text-xs font-black text-emerald-700">${d.poin}</span>`;
           const haidStr = d.haid ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-bold">Haid</span>' : '';
-          return `<div class="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40"><div class="flex items-center justify-between mb-1.5"><div class="text-xs font-bold">${esc(tglFmt)}</div><div class="flex items-center gap-1.5">${haidStr} ${poinStr}</div></div><div class="flex flex-wrap gap-1">${itemChips}</div>${d.catatan ? `<div class="text-[10px] text-slate-600 mt-1.5 italic">"${esc(d.catatan)}"</div>` : ''}</div>`;
+          return `<div class="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40"><div class="flex items-center justify-between mb-1.5"><div class="text-xs font-bold">${esc(tglFmt)}</div><div class="flex items-center gap-1.5">${haidStr} ${poinStr}</div></div><div class="flex flex-wrap gap-1">${itemChips}</div>${d.catatan ? `<div class="text-[10px] text-slate-500 mt-1.5 italic">"${esc(d.catatan)}"</div>` : ''}</div>`;
         }).join('');
         $('historyContent').innerHTML = html;
       } catch (e) { $('historyContent').innerHTML = '<div class="text-center p-6 text-rose-600">Error memuat riwayat.</div>'; }
