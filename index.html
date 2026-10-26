@@ -2,13 +2,11 @@
 <html lang="id" class="light">
 <head>
   <meta charset="UTF-8">
-  <!-- PERBAIKAN 1: Menghapus user-scalable=no dan maximum-scale agar bisa di-zoom -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Mutabaah Yaumiyah | Portal Ibadah</title>
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  
-  <!-- 1. PRECONNECT: Mempercepat koneksi DNS/TLS ke server CDN -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
@@ -17,17 +15,8 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- 2. NON-BLOCKING CSS: FontAwesome dimuat secara asinkron agar tidak memblokir render -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-
-  <!-- 3. GOOGLE FONTS: Menggunakan display=swap agar teks langsung tampil -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- 4. TAILWIND PLAY CDN (Sinkron) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] } } } }
@@ -35,13 +24,8 @@
 
   <style>
     body { transition: background-color 0.25s ease, color 0.25s ease; -webkit-tap-highlight-color: transparent; }
-  <!-- 5. CRITICAL CSS: Mencegah layar berkedip putih (FOUC) selama Tailwind loading -->
-  <style>
-    body { transition: background-color 0.25s ease, color 0.25s ease; -webkit-tap-highlight-color: transparent; }
-    /* Fallback warna agar LCP (Largest Contentful Paint) langsung terlihat */
     body { background-color: #f8fafc; color: #0f172a; }
     html.dark body { background-color: #0b0f19; color: #f1f5f9; }
-    
     .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-top: 1px solid rgba(226, 232, 240, 0.8); }
     .dark .glass-nav { background: rgba(15, 23, 42, 0.85); border-top: 1px solid rgba(51, 65, 85, 0.6); }
     .modal-overlay { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
@@ -98,7 +82,6 @@
       </div>
       <div class="space-y-4">
         <div>
-          <!-- PERBAIKAN 3: Menambahkan for dan aria-label -->
           <label for="loginUser" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5">Username / NISN</label>
           <input type="text" id="loginUser" aria-label="Username atau NISN" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm font-medium transition" placeholder="Contoh: admin">
         </div>
@@ -106,7 +89,6 @@
           <label for="loginPin" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5">PIN Akses</label>
           <input type="password" id="loginPin" aria-label="PIN Akses" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm font-medium transition" placeholder="••••">
         </div>
-        <!-- PERBAIKAN 2: Mengubah bg-emerald-600 menjadi bg-emerald-700 -->
         <button onclick="handleLogin()" id="btnMasuk" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3 rounded-xl shadow-sm transition active:scale-[0.99] text-sm mt-2">
           Masuk ke Portal
         </button>
@@ -204,7 +186,6 @@
         <textarea id="catatanForm" aria-label="Catatan Tambahan" rows="2" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Keterangan uzur atau kondisi khusus..."></textarea>
       </div>
 
-      <!-- PERBAIKAN 2: Mengubah bg-emerald-600 menjadi bg-emerald-700 -->
       <button onclick="submitForm()" id="btnSubmitForm" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3.5 rounded-xl shadow-sm transition active:scale-[0.99] text-sm flex items-center justify-center gap-2">
         <i class="fa-solid fa-paper-plane text-xs" aria-hidden="true"></i> Simpan Mutabaah
       </button>
@@ -587,20 +568,31 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
   <script>
-  <!-- Memuat Chart.js di akhir agar tidak memblokir render (defer) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
-
-  <script>
     // ============================================================
-    // KONFIGURASI GOOGLE APPS SCRIPT
+    // ⚠️ GANTI URL DI BAWAH INI dengan URL Web App /exec Anda
     // ============================================================
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbw-SQoNpwzi4olglFMIc_Bs5zAyCvhIurbfaXJZhehGdeaH4mP5_H5AlFYCzyisDSgR/exec'; // GANTI DENGAN URL ANDA
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycb.../exec';
 
     const $ = id => document.getElementById(id);
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const fmtLocal = d => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().split('T')[0]; };
     const SHALAT_IDS = ['f_shubuh','f_dzuhur','f_ashar','f_maghrib','f_isya'];
     const STAFF_ROLES = ['guru','wali','musyrif','admin'];
+
+    // ==== FIX helpers: normalisasi respons & cek Chart.js ====
+    function asArray(res) {
+      if (Array.isArray(res)) return res;
+      if (res && typeof res === 'object' && Array.isArray(res.data)) return res.data;
+      if (res && res.success === false) console.warn('[backend error]', res.message || res);
+      return [];
+    }
+    function chartReady() {
+      if (typeof Chart === 'undefined') {
+        showToast('Chart.js gagal dimuat. Cek koneksi / CDN.', 'error');
+        return false;
+      }
+      return true;
+    }
 
     function buildParams(fn, args) {
       switch (fn) {
@@ -639,7 +631,7 @@
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const text = await res.text();
-        try { return JSON.parse(text); } 
+        try { return JSON.parse(text); }
         catch (e) { throw new Error('Gagal parse JSON. Pastikan URL /exec benar dan akses Anyone.'); }
       } catch (error) {
         console.error(`[Fetch Error: ${fn}]`, error);
@@ -751,11 +743,13 @@
         if (res && res.success) {
           appState.userRole = res.role; appState.userName = res.nama;
           appState.username = res.username || res.nama;
-          appState.kelasBinaan = res.kelasBinaan || [];
+          appState.kelasBinaan = Array.isArray(res.kelasBinaan)
+            ? res.kelasBinaan
+            : String(res.kelasBinaan || '').split(/[,;]+/).map(k => k.trim()).filter(Boolean);
           appState.gender = res.gender || 'L'; appState.source = res.source || null;
           localStorage.setItem('myq_session', JSON.stringify({
             role: res.role, nama: res.nama, username: res.username || res.nama,
-            kelasBinaan: res.kelasBinaan, gender: res.gender, source: res.source
+            kelasBinaan: appState.kelasBinaan, gender: res.gender, source: res.source
           }));
           showToast(`Selamat datang, ${res.nama}`);
           loginSuccessSetup();
@@ -822,20 +816,23 @@
       if (!canFillOthers) { $('fillForCard').classList.add('hidden'); appState.fillForList = []; return; }
       $('fillForCard').classList.remove('hidden');
       try {
-        const res = await gsRun('getStudentsForBulk');
-        let list = res || [];
-        
+        const binaanArr = Array.isArray(appState.kelasBinaan)
+          ? appState.kelasBinaan
+          : String(appState.kelasBinaan || '').split(/[,;]+/).map(k => k.trim()).filter(Boolean);
+        const binaan = binaanArr.map(k => k.toLowerCase().trim());
+
+        const raw = await gsRun('getStudentsForBulk');
+        let list = asArray(raw);
+
         if (r === 'wali' || r === 'musyrif') {
-          const binaan = (appState.kelasBinaan || []).map(k => k.toLowerCase().trim());
-          list = list.filter(s => { 
-            const kls = (s.kelas || '').toLowerCase().split(/[,;]+/).map(x => x.trim()); 
-            return kls.some(k => binaan.includes(k)); 
+          list = list.filter(s => {
+            const kls = String(s.kelas || '').toLowerCase().split(/[,;]+/).map(x => x.trim());
+            return kls.some(k => binaan.includes(k));
           });
         }
-        
+
         appState.fillForList = list;
         const jenjangSet = new Set();
-        
         list.forEach(s => {
           (s.kelas || '').split(/[,;]+/).forEach(k => {
             const kk = k.trim();
@@ -843,27 +840,18 @@
             if (/^(10|11|12)/.test(kk)) jenjangSet.add('sma');
           });
         });
-        
         const jenjangArr = ['smp','sma'].filter(j => jenjangSet.has(j));
-        
         let html = '<option value="">— Pilih Jenjang —</option>';
-        if (jenjangArr.length === 0) {
-          html = '<option value="all">Semua Jenjang</option>';
-        } else {
-          jenjangArr.forEach(j => { html += `<option value="${j}">${j === 'smp' ? 'SMP (7-9)' : 'SMA (10-12)'}</option>`; });
-        }
-        
+        if (jenjangArr.length === 0) html = '<option value="all">Semua Jenjang</option>';
+        else jenjangArr.forEach(j => { html += `<option value="${j}">${j === 'smp' ? 'SMP (7-9)' : 'SMA (10-12)'}</option>`; });
+
         $('fillForJenjang').innerHTML = html;
         $('fillForKelas').innerHTML = '<option value="">— Pilih Kelas —</option>';
         $('fillForNama').innerHTML = '<option value="">— Pilih Nama —</option>';
         $('fillForBadge').classList.add('hidden'); $('fillForNav').classList.add('hidden');
         appState.fillFor = null;
-        
-        if (jenjangArr.length === 1) { 
-          $('fillForJenjang').value = jenjangArr[0]; 
-          onFillForJenjangChange(); 
-        }
-      } catch (e) { console.error(e); }
+        if (jenjangArr.length === 1) { $('fillForJenjang').value = jenjangArr[0]; onFillForJenjangChange(); }
+      } catch (e) { console.error('[loadFillForOptions]', e); }
     }
 
     function onFillForJenjangChange() {
@@ -871,7 +859,7 @@
       appState.fillFor = null;
       $('fillForBadge').classList.add('hidden'); $('fillForNav').classList.add('hidden');
       if (!j) { $('fillForKelas').innerHTML = '<option value="">— Pilih Kelas —</option>'; $('fillForNama').innerHTML = '<option value="">— Pilih Nama —</option>'; return; }
-      
+
       const kelasSet = new Set();
       appState.fillForList.forEach(s => {
         (s.kelas || '').split(/[,;]+/).forEach(k => {
@@ -881,13 +869,13 @@
           if (j === 'sma' && /^(10|11|12)/.test(kk)) kelasSet.add(kk);
         });
       });
-      
+
       const kelasArr = Array.from(kelasSet).sort((a,b) => a.localeCompare(b, undefined, { numeric: true }));
       let html = '<option value="">— Pilih Kelas —</option>';
       kelasArr.forEach(k => { html += `<option value="${esc(k)}">${esc(k)}</option>`; });
       $('fillForKelas').innerHTML = html;
       $('fillForNama').innerHTML = '<option value="">— Pilih Nama —</option>';
-      
+
       if (kelasArr.length === 1) { $('fillForKelas').value = kelasArr[0]; onFillForKelasChange(); }
     }
 
@@ -934,20 +922,20 @@
           const e = res.entry;
           const setCb = (id, v) => { const el = $(id); if (el) el.checked = (v === 'Ya'); };
           setCb('f_shubuh', e.Shubuh); setCb('f_dzuhur', e.Dzuhur); setCb('f_ashar', e.Ashar); setCb('f_maghrib', e.Maghrib); setCb('f_isya', e.Isya);
-          
+
           setCb('f_rawatib_shubuh_qab', e.RawatibShubuhQab);
           setCb('f_rawatib_dzuhur_qab', e.RawatibDzuhurQab);
           setCb('f_rawatib_dzuhur_bad', e.RawatibDzuhurBad);
           setCb('f_rawatib_maghrib_bad', e.RawatibMaghribBad);
           setCb('f_rawatib_isya_bad', e.RawatibIsyaBad);
 
-          setCb('f_dzikir', e.Dzikir); 
-          setCb('f_tilawah_5lbr', e.Tilawah5Lbr); 
-          setCb('f_qiyamullail', e.Qiyamullail); 
+          setCb('f_dzikir', e.Dzikir);
+          setCb('f_tilawah_5lbr', e.Tilawah5Lbr);
+          setCb('f_qiyamullail', e.Qiyamullail);
           setCb('f_ibadah_sunnah', e.IbadahSunnah);
-          
+
           setCb('f_bantuOrtu', e.BantuOrtu); setCb('f_bijakHP', e.BijakHP); setCb('f_belajar', e.Belajar); setCb('f_tidur', e.Tidur); setCb('f_tilawah', e.Tilawah);
-          
+
           const hd = $('toggleHaid');
           if (hd && e.Haid === 'Ya') { hd.checked = true; handleHaidToggle(); }
           $('catatanForm').value = e.Catatan || '';
@@ -1052,34 +1040,40 @@
       const select = $('filterKelas'); if (!select) return;
       try {
         const res = await gsRun('getClasses');
+        const list = asArray(res);
         let html = '<option value="all">Semua Kategori</option>';
-        (res || []).forEach(c => { html += `<option value="${esc(c.nama)}">Kelas ${esc(c.nama)}</option>`; });
+        list.forEach(c => { html += `<option value="${esc(c.nama)}">Kelas ${esc(c.nama)}</option>`; });
         select.innerHTML = html;
-      } catch (e) {}
+      } catch (e) { console.error('[loadFilterClasses]', e); }
     }
 
     async function loadStatusKelasOptions() {
       const sel = $('statusKelas'); if (!sel) return;
       try {
         const res = await gsRun('getClasses');
-        let list = res || [];
+        let list = asArray(res);
         if (appState.userRole === 'wali' || appState.userRole === 'musyrif') {
-          const binaan = (appState.kelasBinaan || []).map(k => k.toLowerCase().trim());
-          list = list.filter(c => binaan.includes(c.nama.toLowerCase().trim()));
+          const binaanArr = Array.isArray(appState.kelasBinaan)
+            ? appState.kelasBinaan
+            : String(appState.kelasBinaan || '').split(/[,;]+/).map(k => k.trim()).filter(Boolean);
+          const binaan = binaanArr.map(k => k.toLowerCase().trim());
+          list = list.filter(c => binaan.includes(String(c.nama || '').toLowerCase().trim()));
         }
         let html = '<option value="all">Semua Kelas</option>';
         list.forEach(c => { html += `<option value="${esc(c.nama)}">${esc(c.nama)}</option>`; });
         sel.innerHTML = html;
-      } catch (e) {}
+      } catch (e) { console.error('[loadStatusKelasOptions]', e); }
     }
 
     async function loadPersonalHistoryChart() {
       const canvas = $('personalChart'); const empty = $('personalChartEmpty');
       if (!canvas || !empty) return;
+      if (!chartReady()) return;
       try {
         const nama = getEffectiveName(); const role = getEffectiveRole();
         const res = await gsRun('getPersonalHistory', nama, role);
-        if (!res || !res.length) {
+        const list = asArray(res);
+        if (!list.length) {
           if (personalChartInstance) { personalChartInstance.destroy(); personalChartInstance = null; }
           canvas.classList.add('hidden'); empty.classList.remove('hidden');
           empty.innerHTML = `<i class="fa-solid fa-chart-line text-xl mb-1 opacity-50" aria-hidden="true"></i><span>Belum ada data 7 hari terakhir</span><span class="text-[10px] mt-1 opacity-60 text-center px-4">untuk: <b>${esc(nama || '-')}</b> (${esc(role || '-')})</span>`;
@@ -1092,12 +1086,12 @@
         personalChartInstance = new Chart(canvas.getContext('2d'), {
           type: 'line',
           data: {
-            labels: res.map(r => new Date(r.tgl).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric' })),
-            datasets: [{ label: isTeacher ? 'Amalan Terisi' : 'Poin', data: res.map(r => r.val), borderColor: '#059669', backgroundColor: 'rgba(5, 150, 105, 0.1)', borderWidth: 2, fill: true, tension: 0.3, pointRadius: 3 }]
+            labels: list.map(r => new Date(r.tgl).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric' })),
+            datasets: [{ label: isTeacher ? 'Amalan Terisi' : 'Poin', data: list.map(r => r.val), borderColor: '#059669', backgroundColor: 'rgba(5, 150, 105, 0.1)', borderWidth: 2, fill: true, tension: 0.3, pointRadius: 3 }]
           },
           options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { beginAtZero: true, suggestedMax: isTeacher ? 12 : 110, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 9 } } } } }
         });
-      } catch (e) {}
+      } catch (e) { console.error('[loadPersonalHistoryChart]', e); }
     }
 
     function setupDateRestrictions() {
@@ -1161,7 +1155,7 @@
       const gender = getEffectiveGender(); const role = getEffectiveRole();
       const isStaff = STAFF_ROLES.includes(role);
       const haidHtml = gender === 'P' ? `<div class="bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/40 p-3.5 rounded-2xl flex justify-between items-center mb-3"><span class="text-xs font-bold text-rose-800 dark:text-rose-400 flex items-center gap-2"><i class="fa-solid fa-droplet" aria-hidden="true"></i> Sedang Haid (Udzur Syar'i)</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="toggleHaid" aria-label="Sedang Haid" class="sr-only peer" onchange="handleHaidToggle()"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-rose-600"></div></label></div>` : '';
-      
+
       const shalatList = [
         { id: 'f_shubuh', label: 'Subuh', point: 10 },
         { id: 'f_dzuhur', label: 'Dzuhur', point: 10 },
@@ -1173,7 +1167,6 @@
         <div class="bg-white dark:bg-[#111827] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm mb-3">
           <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-500 mb-3 flex items-center gap-1.5"><i class="fa-solid fa-mosque" aria-hidden="true"></i> Shalat Fardhu 5 Waktu</div>
           <div class="grid grid-cols-1 sm:grid-cols-5 gap-2">
-            <!-- PERBAIKAN 3: Wrap dengan label dan tambahkan for -->
             ${shalatList.map(s => `<label for="${s.id}" class="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 cursor-pointer"><span class="text-xs font-semibold text-slate-700 dark:text-slate-200">${esc(s.label)}</span><input type="checkbox" id="${s.id}" data-point="${s.point}" class="cb-hitung w-4 h-4 text-emerald-700 rounded focus:ring-emerald-500"></label>`).join('')}
           </div>
         </div>`;
@@ -1205,14 +1198,13 @@
         { id: 'f_tidur', label: 'Tidur Awal (< Jam 22.00)', point: 10 },
         { id: 'f_tilawah', label: 'Tilawah Al-Quran', point: 20 }
       ];
-      
+
       let html = haidHtml + shalatBox + rawatibBox + `<div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-1 mb-1.5">Amalan Harian Lainnya</div>`;
       html += otherList.map(i => cardCb(i.id, i.label, i.point)).join('');
       container.innerHTML = html;
       calculatePoints();
     }
 
-    // PERBAIKAN 3: Mengganti div terluar dengan label dan menambahkan for
     function cardCb(id, label, point) {
       const attr = point ? `data-point="${point}" class="cb-hitung sr-only peer"` : `class="sr-only peer"`;
       return `<label for="${id}" class="flex items-center justify-between p-3.5 bg-white dark:bg-[#111827] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer">
@@ -1247,9 +1239,9 @@
       const role = getEffectiveRole(); const nama = getEffectiveName();
       const isStaff = STAFF_ROLES.includes(role);
       const payload = { role, nama, tanggal, catatan: $('catatanForm').value, isHaid: appState.isHaid ? 'Ya' : 'Tidak' };
-      
+
       ['shubuh','dzuhur','ashar','maghrib','isya'].forEach(k => { const el = $(`f_${k}`); payload[k] = el && el.checked ? 'Ya' : 'Tidak'; });
-      
+
       payload.rawatib_shubuh_qab = $('f_rawatib_shubuh_qab') && $('f_rawatib_shubuh_qab').checked ? 'Ya' : 'Tidak';
       payload.rawatib_dzuhur_qab = $('f_rawatib_dzuhur_qab') && $('f_rawatib_dzuhur_qab').checked ? 'Ya' : 'Tidak';
       payload.rawatib_dzuhur_bad = $('f_rawatib_dzuhur_bad') && $('f_rawatib_dzuhur_bad').checked ? 'Ya' : 'Tidak';
@@ -1270,7 +1262,7 @@
         payload.tidur = $('f_tidur') && $('f_tidur').checked ? 'Ya' : 'Tidak';
         payload.tilawah = $('f_tilawah') && $('f_tilawah').checked ? 'Ya' : 'Tidak';
       }
-      
+
       if (!navigator.onLine) {
         appState.offlineQueue.push(payload);
         localStorage.setItem('myq_queue', JSON.stringify(appState.offlineQueue));
@@ -1345,8 +1337,8 @@
     }
     function renderNameClickable(nama, role) {
       const safe = esc(nama);
-      const safeJs = JSON.stringify(nama).replace(/"/g, '&quot;');
-      return `<button onclick="showStudentHistory(${safeJs}, '${role}')" class="font-bold hover:text-emerald-700 transition">${safe} <i class="fa-solid fa-clock-rotate-left text-[9px] opacity-50" aria-hidden="true"></i></button>`;
+      const json = JSON.stringify(nama);
+      return `<button onclick='showStudentHistory(${json}, ${JSON.stringify(role)})' class="font-bold hover:text-emerald-700 transition">${safe} <i class="fa-solid fa-clock-rotate-left text-[9px] opacity-50" aria-hidden="true"></i></button>`;
     }
 
     async function loadReportData() {
@@ -1357,16 +1349,17 @@
       const searchQuery = ($('searchStudent') && $('searchStudent').value) || '';
       const tab = appState.currentTab;
       const roleTarget = tab === 'tabGuru' ? 'guru' : 'siswa';
-      
+
       if (tab === 'tabSiswa') $('tableBodySiswa').innerHTML = '<tr><td colspan="20" class="text-center p-6 text-slate-500">Memuat rekap...</td></tr>';
       else if (tab === 'tabGuru') $('tableBodyGuru').innerHTML = '<tr><td colspan="14" class="text-center p-6 text-slate-500">Memuat rekap...</td></tr>';
-      
+
       try {
         const res = await gsRun('getReportData', fKls, sDate, eDate, roleTarget, searchQuery, fGender);
         appState.lastReportData = res;
-        
+
         if (tab === 'tabSiswa' && roleTarget === 'siswa') {
-          $('tableBodySiswa').innerHTML = ((res && res.table) || []).map(r => `
+          const list = asArray(res && res.table);
+          $('tableBodySiswa').innerHTML = list.map(r => `
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50">
               <td class="p-3 text-slate-600">${esc(new Date(r.tgl).toLocaleDateString('id-ID'))}</td>
               <td class="p-3">${renderNameClickable(r.nama, 'siswa')}</td>
@@ -1376,25 +1369,34 @@
             </tr>`).join('') ||
             '<tr><td colspan="20" class="text-center p-6 text-slate-500">Tidak ada data ditemukan.</td></tr>';
         } else if (tab === 'tabGuru' && roleTarget === 'guru') {
-          $('tableBodyGuru').innerHTML = ((res && res.table) || []).map(r => `
-            <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50">
-              <td class="p-3 text-slate-600">${esc(new Date(r.tgl).toLocaleDateString('id-ID'))}</td>
-              <td class="p-3">${renderNameClickable(r.nama, 'guru')}</td>
-              ${(r.cols || []).map((c, idx) => {
-                if (idx >= 6 && idx <= 10) return '';
-                if (idx === 11) {
-                  const rawatibCount = r.cols.slice(6, 11).filter(x => x === 'Ya').length;
-                  return `<td class="p-3 text-center font-bold">${rawatibCount}/5</td>`;
-                }
-                return `<td class="p-3 text-center">${renderCell(c)}</td>`;
-              }).join('')}
-            </tr>`).join('') ||
-            '<tr><td colspan="14" class="text-center p-6 text-slate-500">Tidak ada data ditemukan.</td></tr>';
+          const list = asArray(res && res.table);
+          $('tableBodyGuru').innerHTML = list.map(r => {
+            const c = r.cols || [];
+            const rawatibCount = c.slice(6, 11).filter(x => x === 'Ya').length;
+            return `
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                <td class="p-3 text-slate-600">${esc(new Date(r.tgl).toLocaleDateString('id-ID'))}</td>
+                <td class="p-3">${renderNameClickable(r.nama, 'guru')}</td>
+                <td class="p-3 text-center">${renderCell(c[0])}</td>
+                <td class="p-3 text-center">${renderCell(c[1])}</td>
+                <td class="p-3 text-center">${renderCell(c[2])}</td>
+                <td class="p-3 text-center">${renderCell(c[3])}</td>
+                <td class="p-3 text-center">${renderCell(c[4])}</td>
+                <td class="p-3 text-center">${renderCell(c[5])}</td>
+                <td class="p-3 text-center font-bold">${rawatibCount}/5</td>
+                <td class="p-3 text-center">${renderCell(c[11])}</td>
+                <td class="p-3 text-center">${renderCell(c[12])}</td>
+                <td class="p-3 text-center">${renderCell(c[13])}</td>
+                <td class="p-3 text-center">${renderCell(c[14])}</td>
+                <td class="p-3 text-left">${esc(c[15] || '')}</td>
+              </tr>`;
+          }).join('') || '<tr><td colspan="14" class="text-center p-6 text-slate-500">Tidak ada data ditemukan.</td></tr>';
         }
-        
+
         if (tab === 'tabLeaderboard') {
+          const lbList = asArray(res && res.leaderboard);
           let html = ''; const labels = [], data = [];
-          ((res && res.leaderboard) || []).forEach((item, index) => {
+          lbList.forEach((item, index) => {
             html += `<div class="flex items-center justify-between p-3.5 bg-white dark:bg-[#111827] rounded-xl border border-slate-200 dark:border-slate-800"><div class="flex items-center gap-3"><span class="font-extrabold text-sm w-6 text-slate-500">#${index + 1}</span><div><div class="font-bold text-xs">${esc(item.nama)}</div><div class="text-[10px] text-slate-500">Kelas ${esc(item.kelas)}</div></div></div><div class="font-extrabold text-sm text-emerald-700">${esc(item.poin)} <span class="text-[10px] text-slate-500 font-normal">pts</span></div></div>`;
             labels.push(String(item.nama || '').split(' ')[0]); data.push(item.poin);
           });
@@ -1402,7 +1404,7 @@
           $('contentLeaderboard').classList.remove('hidden');
           renderChart(labels, data);
         }
-      } catch (e) { showToast('Gagal memuat data laporan.', 'error'); }
+      } catch (e) { console.error('[loadReportData]', e); showToast('Gagal memuat data laporan.', 'error'); }
     }
 
     async function exportCSV() {
@@ -1433,9 +1435,10 @@
       openModal('historyModal');
       try {
         const res = await gsRun('getStudentTimeline', nama, role, 30);
-        if (!res || !res.length) { $('historyContent').innerHTML = '<div class="text-center p-6 text-slate-500">Belum ada riwayat.</div>'; return; }
-        const html = res.map(d => {
-          const itemChips = d.itemKeys.map(k => `<span class="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded ${d.items[k] ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 line-through'}">${d.items[k] ? '✓' : '×'} ${esc(k)}</span>`).join('');
+        const list = asArray(res);
+        if (!list.length) { $('historyContent').innerHTML = '<div class="text-center p-6 text-slate-500">Belum ada riwayat.</div>'; return; }
+        const html = list.map(d => {
+          const itemChips = (d.itemKeys || []).map(k => `<span class="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded ${d.items[k] ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 line-through'}">${d.items[k] ? '✓' : '×'} ${esc(k)}</span>`).join('');
           const tglFmt = new Date(d.tgl).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' });
           const poinStr = d.isTeacher ? '' : `<span class="text-xs font-black text-emerald-700">${d.poin}</span>`;
           const haidStr = d.haid ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-bold">Haid</span>' : '';
@@ -1446,12 +1449,15 @@
     }
 
     async function loadCompareChart() {
+      if (!chartReady()) return;
       const sDate = ($('filterStart') && $('filterStart').value) || '';
       const eDate = ($('filterEnd') && $('filterEnd').value) || '';
       try {
         const res = await gsRun('getClassComparison', sDate, eDate);
-        const rows = res || [];
-        $('compareList').innerHTML = rows.length ? rows.map((r, i) => `<div class="flex items-center justify-between p-3 bg-white dark:bg-[#111827] rounded-xl border border-slate-200 dark:border-slate-800"><div class="flex items-center gap-3"><span class="font-extrabold text-sm w-6 text-slate-500">#${i + 1}</span><div><div class="font-bold text-xs">Kelas ${esc(r.kelas)}</div><div class="text-[10px] text-slate-500">${r.total} pengisian</div></div></div><div class="font-extrabold text-sm text-emerald-700">Avg ${esc(r.avg)}</div></div>`).join('') : '<div class="text-center p-6 text-slate-500">Belum ada data.</div>';
+        const rows = asArray(res);
+        $('compareList').innerHTML = rows.length
+          ? rows.map((r, i) => `<div class="flex items-center justify-between p-3 bg-white dark:bg-[#111827] rounded-xl border border-slate-200 dark:border-slate-800"><div class="flex items-center gap-3"><span class="font-extrabold text-sm w-6 text-slate-500">#${i + 1}</span><div><div class="font-bold text-xs">Kelas ${esc(r.kelas)}</div><div class="text-[10px] text-slate-500">${r.total} pengisian</div></div></div><div class="font-extrabold text-sm text-emerald-700">Avg ${esc(String(r.avg))}</div></div>`).join('')
+          : '<div class="text-center p-6 text-slate-500">Belum ada data.</div>';
         if (compareChartInstance) compareChartInstance.destroy();
         const canvas = $('compareChart'); if (!canvas) return;
         const isDark = document.documentElement.classList.contains('dark');
@@ -1460,16 +1466,17 @@
           data: { labels: rows.map(r => r.kelas), datasets: [{ label: 'Rata-rata Poin', data: rows.map(r => r.avg), backgroundColor: '#0ea5e9', borderRadius: 4 }] },
           options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } } } }
         });
-      } catch (e) {}
+      } catch (e) { console.error('[loadCompareChart]', e); }
     }
 
     async function loadStreakLeaderboard() {
       $('streakList').innerHTML = '<div class="text-center p-6 text-slate-500">Memuat...</div>';
       try {
         const res = await gsRun('getStreakLeaderboard');
-        if (!res || !res.length) { $('streakList').innerHTML = '<div class="text-center p-6 text-slate-500">Belum ada streak.</div>'; return; }
-        $('streakList').innerHTML = res.map((r, i) => `<div class="flex items-center justify-between p-3.5 bg-white dark:bg-[#111827] rounded-xl border border-slate-200 dark:border-slate-800"><div class="flex items-center gap-3"><span class="font-extrabold text-sm w-6 text-slate-500">#${i + 1}</span><div class="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-rose-600 flex items-center justify-center text-white"><i class="fa-solid fa-fire" aria-hidden="true"></i></div><div><div class="font-bold text-xs">${esc(r.nama)}</div><div class="text-[10px] text-slate-500">Kelas ${esc(r.kelas || '-')}</div></div></div><div class="font-extrabold text-sm text-orange-600">${r.streak} <span class="text-[10px] text-slate-500 font-normal">hari</span></div></div>`).join('');
-      } catch (e) { $('streakList').innerHTML = '<div class="text-center p-6 text-rose-600">Error.</div>'; }
+        const list = asArray(res);
+        if (!list.length) { $('streakList').innerHTML = '<div class="text-center p-6 text-slate-500">Belum ada streak.</div>'; return; }
+        $('streakList').innerHTML = list.map((r, i) => `<div class="flex items-center justify-between p-3.5 bg-white dark:bg-[#111827] rounded-xl border border-slate-200 dark:border-slate-800"><div class="flex items-center gap-3"><span class="font-extrabold text-sm w-6 text-slate-500">#${i + 1}</span><div class="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-rose-600 flex items-center justify-center text-white"><i class="fa-solid fa-fire" aria-hidden="true"></i></div><div><div class="font-bold text-xs">${esc(r.nama)}</div><div class="text-[10px] text-slate-500">Kelas ${esc(r.kelas || '-')}</div></div></div><div class="font-extrabold text-sm text-orange-600">${r.streak} <span class="text-[10px] text-slate-500 font-normal">hari</span></div></div>`).join('');
+      } catch (e) { console.error('[loadStreakLeaderboard]', e); $('streakList').innerHTML = '<div class="text-center p-6 text-rose-600">Error.</div>'; }
     }
 
     async function loadNotifBadge() {
@@ -1555,24 +1562,27 @@
       try {
         const res = await gsRun('getDailyFillStatus', tanggal, kelas, appState.userRole, appState.kelasBinaan, status, search);
         appState.lastStatusData = res;
-        
-        if (!res || !res.summary) { $('statusList').innerHTML = `<div class="text-center p-6 text-rose-600">Gagal memuat data.</div>`; return; }
-        
+        if (!res || !res.summary) {
+          $('statusList').innerHTML = '<div class="text-center p-6 text-rose-600">Gagal memuat data.</div>'; return;
+        }
         const pct = res.summary.total ? Math.round(res.summary.sudah / res.summary.total * 100) : 0;
-        $('statusSummary').innerHTML = `<div class="flex flex-wrap items-center gap-2 text-xs"><span class="px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-400 rounded-lg font-bold">✅ Sudah: ${res.summary.sudah}</span><span class="px-3 py-1.5 bg-rose-100 dark:bg-rose-900/40 text-rose-800 dark:text-rose-400 rounded-lg font-bold">❌ Belum: ${res.summary.belum}</span><span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg font-bold">📊 Total: ${res.summary.total} (${pct}% sudah isi)</span></div>`;
-        
-        if (!res.list.length) { $('statusList').innerHTML = '<div class="text-center p-6 text-slate-500">Tidak ada siswa di filter ini.</div>'; return; }
-        
+        $('statusSummary').innerHTML = `<div class="flex flex-wrap items-center gap-2 text-xs"><span class="px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-400 rounded-lg font-bold">✅ Sudah: ${res.summary.sudah}</span><span class="px-3 py-1.5 bg-rose-100 dark:bg-rose-900/40 text-rose-800 dark:text-rose-400 rounded-lg font-bold">❌ Belum: ${res.summary.belum}</span><span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg font-bold">📊 Total: ${res.summary.total} (${pct}%)</span></div>`;
+
+        const list = asArray(res.list);
+        if (!list.length) { $('statusList').innerHTML = '<div class="text-center p-6 text-slate-500">Tidak ada siswa di filter ini.</div>'; return; }
+
         let html = '<div class="overflow-x-auto"><table class="w-full text-xs text-left print-table"><thead class="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 uppercase tracking-wider font-bold"><tr><th class="p-3">No</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3 text-center">Status</th><th class="p-3 text-center">Poin</th></tr></thead><tbody class="divide-y divide-slate-100 dark:divide-slate-800">';
-        res.list.forEach((s, i) => {
-          const badge = s.sudah ? '<span class="text-emerald-700 font-bold"><i class="fa-solid fa-check" aria-hidden="true"></i> Sudah</span>' : '<span class="text-rose-700 font-bold"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Belum</span>';
+        list.forEach((s, i) => {
+          const badge = s.sudah
+            ? '<span class="text-emerald-700 font-bold"><i class="fa-solid fa-check" aria-hidden="true"></i> Sudah</span>'
+            : '<span class="text-rose-700 font-bold"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Belum</span>';
           const rowBg = s.sudah ? '' : 'bg-rose-50/40 dark:bg-rose-950/10';
-          const safeJs = JSON.stringify(s.nama).replace(/"/g, '&quot;');
-          html += `<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 ${rowBg}"><td class="p-3 text-slate-500">${i + 1}</td><td class="p-3 font-bold"><button onclick="showStudentHistory(${safeJs}, 'siswa')" class="hover:text-emerald-700">${esc(s.nama)} <i class="fa-solid fa-clock-rotate-left text-[9px] opacity-50" aria-hidden="true"></i></button></td><td class="p-3">${esc(s.kelas || '-')}</td><td class="p-3 text-center">${badge}</td><td class="p-3 text-center font-extrabold text-emerald-700">${s.sudah ? (res.lastStatusData && res.lastStatusData.data ? 0 : 0) : '-'}</td></tr>`;
+          const poin = (s.sudah && s.poin !== null && s.poin !== undefined) ? s.poin : '-';
+          html += `<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 ${rowBg}"><td class="p-3 text-slate-500">${i + 1}</td><td class="p-3 font-bold">${renderNameClickable(s.nama, 'siswa')}</td><td class="p-3">${esc(s.kelas || '-')}</td><td class="p-3 text-center">${badge}</td><td class="p-3 text-center font-extrabold text-emerald-700">${esc(String(poin))}</td></tr>`;
         });
         html += '</tbody></table></div>';
         $('statusList').innerHTML = html;
-      } catch (e) { $('statusList').innerHTML = '<div class="text-center p-6 text-rose-600">Error memuat data.</div>'; }
+      } catch (e) { console.error('[loadStatusData]', e); $('statusList').innerHTML = '<div class="text-center p-6 text-rose-600">Error memuat data.</div>'; }
     }
 
     function copyBelumIsi() {
@@ -1598,14 +1608,17 @@
     }
 
     function renderChart(labels, data) {
-      if (myChart) myChart.destroy();
-      const canvas = $('lbChart'); if (!canvas) return;
-      const isDark = document.documentElement.classList.contains('dark');
-      myChart = new Chart(canvas.getContext('2d'), {
-        type: 'bar',
-        data: { labels, datasets: [{ label: 'Poin', data, backgroundColor: '#059669', borderRadius: 4 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } } } }
-      });
+      if (!chartReady()) return;
+      try {
+        if (myChart) myChart.destroy();
+        const canvas = $('lbChart'); if (!canvas) return;
+        const isDark = document.documentElement.classList.contains('dark');
+        myChart = new Chart(canvas.getContext('2d'), {
+          type: 'bar',
+          data: { labels, datasets: [{ label: 'Poin', data, backgroundColor: '#059669', borderRadius: 4 }] },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } } } }
+        });
+      } catch (e) { console.error('[renderChart]', e); }
     }
 
     function openModal(id) { const el = $(id); if (el) el.classList.remove('hidden'); }
@@ -1630,8 +1643,9 @@
       openModal('classModal');
       try {
         const res = await gsRun('getClasses');
-        $('classTableBody').innerHTML = (res || []).map(k => `<tr><td class="p-2 font-medium">${esc(k.nama)}</td><td class="p-2 text-right"><button onclick="confirmDelClass('${esc(k.id)}')" aria-label="Hapus Kelas" class="text-rose-600"><i class="fa-solid fa-trash" aria-hidden="true"></i></button></td></tr>`).join('');
-      } catch (e) {}
+        const list = asArray(res);
+        $('classTableBody').innerHTML = list.map(k => `<tr><td class="p-2 font-medium">${esc(k.nama)}</td><td class="p-2 text-right"><button onclick="confirmDelClass('${esc(k.id)}')" aria-label="Hapus Kelas" class="text-rose-600"><i class="fa-solid fa-trash" aria-hidden="true"></i></button></td></tr>`).join('') || '<tr><td colspan="2" class="text-center p-3 text-slate-500 text-xs">Belum ada kelas.</td></tr>';
+      } catch (e) { console.error(e); }
     }
     async function saveClassData() {
       const n = $('className').value.trim(); if (!n) return;
@@ -1653,9 +1667,10 @@
       $('searchStudentModal').value = '';
       try {
         const students = await gsRun('getStudentsForBulk');
-        appState.allStudentsCache = students || [];
-        $('studentTableBody').innerHTML = (students || []).map(s => `<tr><td class="p-2"><b>${esc(s.nama)}</b><span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 ml-1">siswa</span><br><span class="text-[10px] text-slate-500">NIS ${esc(s.username)} · ${esc(s.kelas || '-')} · ${esc(s.gender)}</span></td><td class="p-2 text-right"><button onclick="confirmDelStudent('${esc(s.username)}')" aria-label="Hapus Siswa" class="text-rose-600"><i class="fa-solid fa-trash" aria-hidden="true"></i></button></td></tr>`).join('') || '<tr><td colspan="2" class="text-center p-3 text-slate-500 text-xs">Belum ada akun siswa.</td></tr>';
-      } catch (e) {}
+        const list = asArray(students);
+        appState.allStudentsCache = list;
+        $('studentTableBody').innerHTML = list.map(s => `<tr><td class="p-2"><b>${esc(s.nama)}</b><span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 ml-1">siswa</span><br><span class="text-[10px] text-slate-500">NIS ${esc(s.username)} · ${esc(s.kelas || '-')} · ${esc(s.gender)}</span></td><td class="p-2 text-right"><button onclick="confirmDelStudent('${esc(s.username)}')" aria-label="Hapus Siswa" class="text-rose-600"><i class="fa-solid fa-trash" aria-hidden="true"></i></button></td></tr>`).join('') || '<tr><td colspan="2" class="text-center p-3 text-slate-500 text-xs">Belum ada akun siswa.</td></tr>';
+      } catch (e) { console.error(e); }
     }
     async function saveStudentData() {
       const nis = $('studentNis').value.trim();
@@ -1685,9 +1700,10 @@
       $('searchTeacherModal').value = '';
       try {
         const teachers = await gsRun('getTeachers');
-        appState.allTeachersCache = teachers || [];
-        $('teacherTableBody').innerHTML = (teachers || []).map(s => `<tr><td class="p-2"><b>${esc(s.nama)}</b><span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400 ml-1">${esc(s.role || 'guru')}</span><br><span class="text-[10px] text-slate-500">@${esc(s.username)} · ${esc(s.kelas || '-')} · ${esc(s.gender)}</span></td><td class="p-2 text-right"><button onclick="confirmDelTeacher('${esc(s.id)}')" aria-label="Hapus Guru" class="text-rose-600"><i class="fa-solid fa-trash" aria-hidden="true"></i></button></td></tr>`).join('') || '<tr><td colspan="2" class="text-center p-3 text-slate-500 text-xs">Belum ada akun guru.</td></tr>';
-      } catch (e) {}
+        const list = asArray(teachers);
+        appState.allTeachersCache = list;
+        $('teacherTableBody').innerHTML = list.map(s => `<tr><td class="p-2"><b>${esc(s.nama)}</b><span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400 ml-1">${esc(s.role || 'guru')}</span><br><span class="text-[10px] text-slate-500">@${esc(s.username)} · ${esc(s.kelas || '-')} · ${esc(s.gender)}</span></td><td class="p-2 text-right"><button onclick="confirmDelTeacher('${esc(s.id)}')" aria-label="Hapus Guru" class="text-rose-600"><i class="fa-solid fa-trash" aria-hidden="true"></i></button></td></tr>`).join('') || '<tr><td colspan="2" class="text-center p-3 text-slate-500 text-xs">Belum ada akun guru.</td></tr>';
+      } catch (e) { console.error(e); }
     }
     async function saveTeacherData() {
       const username = $('teacherUsername').value.trim();
