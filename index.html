@@ -2,22 +2,18 @@
 <html lang="id" class="light">
 <head>
   <meta charset="UTF-8">
-  <!-- PERBAIKAN AKSESIBILITAS: Menghapus user-scalable=no agar bisa di-zoom -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Mutabaah Yaumiyah | Portal Ibadah</title>
-  <!-- PERBAIKAN SEO: Menambahkan meta description -->
   <meta name="description" content="Aplikasi monitoring ibadah harian (Mutabaah Yaumiyah) untuk siswa dan guru. Pantau shalat, tilawah, dan amalan harian lainnya.">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  
-  <!-- Preconnect untuk mempercepat koneksi ke CDN -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
-  <!-- FontAwesome non-blocking -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
@@ -32,7 +28,7 @@
     body { transition: background-color 0.25s ease, color 0.25s ease; -webkit-tap-highlight-color: transparent; }
     body { background-color: #f8fafc; color: #0f172a; }
     html.dark body { background-color: #0b0f19; color: #f1f5f9; }
-    
+
     .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-top: 1px solid rgba(226, 232, 240, 0.8); }
     .dark .glass-nav { background: rgba(15, 23, 42, 0.85); border-top: 1px solid rgba(51, 65, 85, 0.6); }
     .modal-overlay { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
@@ -96,7 +92,6 @@
           <label for="loginPin" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5">PIN Akses</label>
           <input type="password" id="loginPin" aria-label="PIN Akses" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm font-medium transition" placeholder="••••">
         </div>
-        <!-- PERBAIKAN KONTRAS: bg-emerald-700 -->
         <button onclick="handleLogin()" id="btnMasuk" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3 rounded-xl shadow-sm transition active:scale-[0.99] text-sm mt-2">
           Masuk ke Portal
         </button>
@@ -133,7 +128,6 @@
         <div class="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-500 flex items-center gap-1.5">
           <i class="fa-solid fa-clock" aria-hidden="true"></i> Jadwal Shalat (Standar Kemenag RI)
         </div>
-        <!-- PERBAIKAN KONTRAS: dark:text-slate-400 -->
         <span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">WIB</span>
       </div>
       <div id="prayerScheduleWidget" class="grid grid-cols-5 gap-1.5 text-center">
@@ -176,7 +170,6 @@
     <div class="bg-white dark:bg-[#111827] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
       <div class="flex justify-between items-center mb-2">
         <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"><i class="fa-solid fa-chart-column mr-1.5 text-emerald-700 dark:text-emerald-500" aria-hidden="true"></i> Progres Mandiri (7 Hari)</span>
-        <!-- PERBAIKAN KONTRAS: dark:text-slate-400 -->
         <span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Tren Ibadah</span>
       </div>
       <div class="relative w-full h-32">
@@ -196,7 +189,6 @@
         <textarea id="catatanForm" aria-label="Catatan Tambahan" rows="2" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Keterangan uzur atau kondisi khusus..."></textarea>
       </div>
 
-      <!-- PERBAIKAN KONTRAS: bg-emerald-700 -->
       <button onclick="submitForm()" id="btnSubmitForm" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3.5 rounded-xl shadow-sm transition active:scale-[0.99] text-sm flex items-center justify-center gap-2">
         <i class="fa-solid fa-paper-plane text-xs" aria-hidden="true"></i> Simpan Mutabaah
       </button>
@@ -297,8 +289,8 @@
               <th class="p-3 text-center">Poin</th><th class="p-3 text-center">Haid</th>
               <th class="p-3 text-center">Subuh</th><th class="p-3 text-center">Dzuhur</th><th class="p-3 text-center">Ashar</th>
               <th class="p-3 text-center">Maghrib</th><th class="p-3 text-center">Isya</th>
-              <th class="p-3 text-center">Rwtb Subuh</th><th class="p-3 text-center">Rwtb Dzuhur</th><th class="p-3 text-center">Rwtb Ashar</th>
-              <th class="p-3 text-center">Rwtb Maghrib</th><th class="p-3 text-center">Rwtb Isya</th>
+              <th class="p-3 text-center">Qab Subuh</th><th class="p-3 text-center">Qab Dzuhur</th><th class="p-3 text-center">Bad Dzuhur</th>
+              <th class="p-3 text-center">Bad Maghrib</th><th class="p-3 text-center">Bad Isya</th>
               <th class="p-3 text-center">Ortu</th><th class="p-3 text-center">HP</th><th class="p-3 text-center">Belajar</th><th class="p-3 text-center">Tidur</th><th class="p-3 text-center">Tilawah</th>
             </tr>
           </thead>
@@ -348,7 +340,6 @@
 
   <nav id="bottomNav" class="hidden fixed bottom-0 w-full glass-nav z-50 no-print">
     <div class="flex justify-around items-center h-16 max-w-md mx-auto px-4">
-      <!-- PERBAIKAN KONTRAS: text-emerald-600 dark:text-emerald-400 -->
       <button id="navFormBtn" onclick="switchView('Form')" class="flex flex-col items-center justify-center w-full h-full text-emerald-600 dark:text-emerald-400 border-t-2 border-emerald-600 dark:border-emerald-400 transition">
         <i class="fa-solid fa-pen-to-square text-lg mb-0.5" aria-hidden="true"></i>
         <span class="text-[10px] font-bold tracking-wide">Formulir</span>
@@ -401,7 +392,7 @@
         <button onclick="closeModal('bulkModal')" aria-label="Tutup" class="text-slate-500 hover:text-rose-600"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
       </div>
       <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-900/40 rounded-xl p-3 mb-4 text-xs text-amber-800 dark:text-amber-400">
-        <i class="fa-solid fa-info-circle" aria-hidden="true"></i> Centang amalan yang <b>sama</b> untuk semua siswa di kelas yang dipilih, lalu klik Simpan. Amalan yang tidak dicentang akan ditandai "Tidak" untuk semua siswa.
+        <i class="fa-solid fa-info-circle" aria-hidden="true"></i> Centang amalan yang <b>sama</b> untuk semua siswa di kelas yang dipilih, lalu klik Simpan. Amalan yang tidak dicentang akan ditandai "Tidak" untuk semua siswa. Status haid, shalat rawatib, dan catatan yang sudah tersimpan tidak ikut tertimpa.
       </div>
       <div class="grid grid-cols-2 gap-2 mb-3">
         <select id="bulkJenjang" aria-label="Pilih Jenjang Massal" onchange="onBulkJenjangChange()" class="p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold outline-none">
@@ -417,7 +408,7 @@
       </div>
 
       <div id="bulkForm" class="hidden space-y-2">
-        <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-500 mb-1">Shalat Fardhu & Rawatib</div>
+        <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-500 mb-1">Shalat Fardhu</div>
         <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
           <label for="bulk_shubuh" class="flex items-center gap-1.5 p-2 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 text-xs font-semibold cursor-pointer">
             <input type="checkbox" id="bulk_shubuh" class="w-3.5 h-3.5 text-emerald-700 rounded"> Subuh
@@ -577,21 +568,30 @@
 
   <div id="toast" class="fixed top-16 right-4 p-3.5 rounded-xl shadow-lg text-white font-semibold text-xs transition-all duration-300 transform translate-x-10 opacity-0 pointer-events-none z-[100] flex items-center gap-2.5"></div>
 
-  <!-- Memuat Chart.js di akhir agar tidak memblokir render (defer) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
   <script>
     // ============================================================
     // KONFIGURASI GOOGLE APPS SCRIPT
     // ============================================================
-    // PERBAIKAN FATAL: GANTI URL DI BAWAH INI DENGAN URL WEB APP ANDA YANG ASLI (BERAKHIRAN /exec)
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbw-SQoNpwzi4olglFMIc_Bs5zAyCvhIurbfaXJZhehGdeaH4mP5_H5AlFYCzyisDSgR/exec'; 
+    // Ganti dengan URL Web App Anda (berakhiran /exec). Setelah mengubah Code.gs,
+    // deploy sebagai "New version" agar URL ini menjalankan kode terbaru.
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbw-SQoNpwzi4olglFMIc_Bs5zAyCvhIurbfaXJZhehGdeaH4mP5_H5AlFYCzyisDSgR/exec';
 
     const $ = id => document.getElementById(id);
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const fmtLocal = d => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().split('T')[0]; };
     const SHALAT_IDS = ['f_shubuh','f_dzuhur','f_ashar','f_maghrib','f_isya'];
     const STAFF_ROLES = ['guru','wali','musyrif','admin'];
+    // kelasBinaan dari server/sesi lama bisa berupa teks "7.1" atau array; selalu jadikan array
+    const toKelasArray = v => Array.isArray(v) ? v : String(v || '').split(/[,;]+/).map(s => s.trim()).filter(Boolean);
+    const ITEM_LABELS = {
+      Shubuh: 'Subuh', Dzuhur: 'Dzuhur', Ashar: 'Ashar', Maghrib: 'Maghrib', Isya: 'Isya',
+      RawatibShubuhQab: 'Qabliyah Subuh', RawatibDzuhurQab: 'Qabliyah Dzuhur', RawatibDzuhurBad: "Ba'diyah Dzuhur",
+      RawatibMaghribBad: "Ba'diyah Maghrib", RawatibIsyaBad: "Ba'diyah Isya",
+      BantuOrtu: 'Bantu ortu', BijakHP: 'Bijak HP', Belajar: 'Belajar', Tidur: 'Tidur awal', Tilawah: 'Tilawah',
+      Dzikir: 'Dzikir', Tilawah5Lbr: 'Tilawah 5 lembar', Qiyamullail: 'Qiyamullail', IbadahSunnah: 'Ibadah sunnah'
+    };
 
     function buildParams(fn, args) {
       switch (fn) {
@@ -630,7 +630,7 @@
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const text = await res.text();
-        try { return JSON.parse(text); } 
+        try { return JSON.parse(text); }
         catch (e) { throw new Error('Gagal parse JSON. Pastikan URL /exec benar dan akses Anyone.'); }
       } catch (error) {
         console.error(`[Fetch Error: ${fn}]`, error);
@@ -668,7 +668,7 @@
             const s = JSON.parse(savedSession);
             appState.userRole = s.role; appState.userName = s.nama;
             appState.username = s.username || s.nama;
-            appState.kelasBinaan = s.kelasBinaan || [];
+            appState.kelasBinaan = toKelasArray(s.kelasBinaan);
             appState.gender = s.gender || 'L'; appState.source = s.source || null;
             loginSuccessSetup();
           } catch (e) { localStorage.removeItem('myq_session'); }
@@ -681,18 +681,18 @@
     };
 
     async function fetchPrayerTimes() {
-      const CACHE_KEY = 'myq_prayer_cache_v2';
-      const CACHE_TTL = 12 * 60 * 60 * 1000;
+      const CACHE_KEY = 'myq_prayer_cache_v3';
       const widget = $('prayerScheduleWidget');
       if (!widget) return;
+      const todayKey = fmtLocal(new Date());
       try {
         const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
-        if (cached && Date.now() - cached.ts < CACHE_TTL && cached.timings) { renderPrayerWidget(cached.timings); return; }
+        if (cached && cached.date === todayKey && cached.timings) { renderPrayerWidget(cached.timings); return; }
       } catch (e) {}
       try {
         const res = await gsRun('getPrayerTimes', 'Surabaya', 'ID');
         if (res && res.success && res.timings) {
-          localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), timings: res.timings }));
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ date: todayKey, timings: res.timings }));
           renderPrayerWidget(res.timings);
         } else widget.innerHTML = '<div class="col-span-5 text-[10px] text-slate-500 py-1">Jadwal shalat tidak tersedia</div>';
       } catch (e) { widget.innerHTML = '<div class="col-span-5 text-[10px] text-slate-500 py-1">Jadwal shalat offline</div>'; }
@@ -722,9 +722,10 @@
     function showToast(msg, type = 'success') {
       const toast = $('toast');
       if (!toast) return;
+      const colors = { success: 'bg-emerald-700', error: 'bg-rose-700', warning: 'bg-amber-600' };
       const icon = type === 'success' ? '<i class="fa-solid fa-circle-check" aria-hidden="true"></i>' : '<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>';
       toast.innerHTML = `${icon} <span>${esc(msg)}</span>`;
-      toast.className = `fixed top-16 right-4 p-3.5 rounded-xl shadow-xl text-white font-semibold text-xs transition-all duration-300 transform z-[100] flex items-center gap-2.5 ${type === 'success' ? 'bg-emerald-700' : 'bg-rose-700'}`;
+      toast.className = `fixed top-16 right-4 p-3.5 rounded-xl shadow-xl text-white font-semibold text-xs transition-all duration-300 transform z-[100] flex items-center gap-2.5 ${colors[type] || 'bg-rose-700'}`;
       toast.classList.remove('translate-x-10', 'opacity-0');
       setTimeout(() => toast.classList.add('translate-x-10', 'opacity-0'), 3500);
     }
@@ -742,11 +743,11 @@
         if (res && res.success) {
           appState.userRole = res.role; appState.userName = res.nama;
           appState.username = res.username || res.nama;
-          appState.kelasBinaan = res.kelasBinaan || [];
+          appState.kelasBinaan = toKelasArray(res.kelasBinaan);
           appState.gender = res.gender || 'L'; appState.source = res.source || null;
           localStorage.setItem('myq_session', JSON.stringify({
             role: res.role, nama: res.nama, username: res.username || res.nama,
-            kelasBinaan: res.kelasBinaan, gender: res.gender, source: res.source
+            kelasBinaan: appState.kelasBinaan, gender: res.gender, source: res.source
           }));
           showToast(`Selamat datang, ${res.nama}`);
           loginSuccessSetup();
@@ -794,8 +795,8 @@
       $('profileBtn').classList.remove('hidden');
       setupDateRestrictions();
       const today = new Date(); const lastWeek = new Date(); lastWeek.setDate(today.getDate() - 7);
-      $('filterEnd').valueAsDate = today;
-      $('filterStart').valueAsDate = lastWeek;
+      $('filterEnd').value = fmtLocal(today);
+      $('filterStart').value = fmtLocal(lastWeek);
       const sd = $('statusDate'); if (sd) sd.value = fmtLocal(today);
       setupRoleBasedUI();
       loadPersonalHistoryChart();
@@ -815,18 +816,18 @@
       try {
         const res = await gsRun('getStudentsForBulk');
         let list = res || [];
-        
+
         if (r === 'wali' || r === 'musyrif') {
           const binaan = (appState.kelasBinaan || []).map(k => k.toLowerCase().trim());
-          list = list.filter(s => { 
-            const kls = (s.kelas || '').toLowerCase().split(/[,;]+/).map(x => x.trim()); 
-            return kls.some(k => binaan.includes(k)); 
+          list = list.filter(s => {
+            const kls = (s.kelas || '').toLowerCase().split(/[,;]+/).map(x => x.trim());
+            return kls.some(k => binaan.includes(k));
           });
         }
-        
+
         appState.fillForList = list;
         const jenjangSet = new Set();
-        
+
         list.forEach(s => {
           (s.kelas || '').split(/[,;]+/).forEach(k => {
             const kk = k.trim();
@@ -834,25 +835,28 @@
             if (/^(10|11|12)/.test(kk)) jenjangSet.add('sma');
           });
         });
-        
+
         const jenjangArr = ['smp','sma'].filter(j => jenjangSet.has(j));
-        
+
         let html = '<option value="">— Pilih Jenjang —</option>';
         if (jenjangArr.length === 0) {
           html = '<option value="all">Semua Jenjang</option>';
         } else {
           jenjangArr.forEach(j => { html += `<option value="${j}">${j === 'smp' ? 'SMP (7-9)' : 'SMA (10-12)'}</option>`; });
         }
-        
+
         $('fillForJenjang').innerHTML = html;
         $('fillForKelas').innerHTML = '<option value="">— Pilih Kelas —</option>';
         $('fillForNama').innerHTML = '<option value="">— Pilih Nama —</option>';
         $('fillForBadge').classList.add('hidden'); $('fillForNav').classList.add('hidden');
         appState.fillFor = null;
-        
-        if (jenjangArr.length === 1) { 
-          $('fillForJenjang').value = jenjangArr[0]; 
-          onFillForJenjangChange(); 
+
+        if (jenjangArr.length === 1) {
+          $('fillForJenjang').value = jenjangArr[0];
+          onFillForJenjangChange();
+        } else if (jenjangArr.length === 0 && list.length) {
+          $('fillForJenjang').value = 'all';
+          onFillForJenjangChange();
         }
       } catch (e) { console.error(e); }
     }
@@ -862,23 +866,24 @@
       appState.fillFor = null;
       $('fillForBadge').classList.add('hidden'); $('fillForNav').classList.add('hidden');
       if (!j) { $('fillForKelas').innerHTML = '<option value="">— Pilih Kelas —</option>'; $('fillForNama').innerHTML = '<option value="">— Pilih Nama —</option>'; return; }
-      
+
       const kelasSet = new Set();
       appState.fillForList.forEach(s => {
         (s.kelas || '').split(/[,;]+/).forEach(k => {
           const kk = k.trim();
+          if (!kk) return;
           if (j === 'all') { kelasSet.add(kk); return; }
           if (j === 'smp' && /^(7|8|9)/.test(kk)) kelasSet.add(kk);
           if (j === 'sma' && /^(10|11|12)/.test(kk)) kelasSet.add(kk);
         });
       });
-      
+
       const kelasArr = Array.from(kelasSet).sort((a,b) => a.localeCompare(b, undefined, { numeric: true }));
       let html = '<option value="">— Pilih Kelas —</option>';
       kelasArr.forEach(k => { html += `<option value="${esc(k)}">${esc(k)}</option>`; });
       $('fillForKelas').innerHTML = html;
       $('fillForNama').innerHTML = '<option value="">— Pilih Nama —</option>';
-      
+
       if (kelasArr.length === 1) { $('fillForKelas').value = kelasArr[0]; onFillForKelasChange(); }
     }
 
@@ -918,27 +923,27 @@
       const tanggal = $('tglInput').value;
       if (!tanggal) return;
       const nama = getEffectiveName(); const role = getEffectiveRole();
-      resetForm(false);
+      resetForm();
       try {
         const res = await gsRun('getMutabaahEntry', nama, tanggal, role);
         if (res && res.found) {
           const e = res.entry;
           const setCb = (id, v) => { const el = $(id); if (el) el.checked = (v === 'Ya'); };
           setCb('f_shubuh', e.Shubuh); setCb('f_dzuhur', e.Dzuhur); setCb('f_ashar', e.Ashar); setCb('f_maghrib', e.Maghrib); setCb('f_isya', e.Isya);
-          
+
           setCb('f_rawatib_shubuh_qab', e.RawatibShubuhQab);
           setCb('f_rawatib_dzuhur_qab', e.RawatibDzuhurQab);
           setCb('f_rawatib_dzuhur_bad', e.RawatibDzuhurBad);
           setCb('f_rawatib_maghrib_bad', e.RawatibMaghribBad);
           setCb('f_rawatib_isya_bad', e.RawatibIsyaBad);
 
-          setCb('f_dzikir', e.Dzikir); 
-          setCb('f_tilawah_5lbr', e.Tilawah5Lbr); 
-          setCb('f_qiyamullail', e.Qiyamullail); 
+          setCb('f_dzikir', e.Dzikir);
+          setCb('f_tilawah_5lbr', e.Tilawah5Lbr);
+          setCb('f_qiyamullail', e.Qiyamullail);
           setCb('f_ibadah_sunnah', e.IbadahSunnah);
-          
+
           setCb('f_bantuOrtu', e.BantuOrtu); setCb('f_bijakHP', e.BijakHP); setCb('f_belajar', e.Belajar); setCb('f_tidur', e.Tidur); setCb('f_tilawah', e.Tilawah);
-          
+
           const hd = $('toggleHaid');
           if (hd && e.Haid === 'Ya') { hd.checked = true; handleHaidToggle(); }
           $('catatanForm').value = e.Catatan || '';
@@ -973,6 +978,7 @@
       appState.fillForList.forEach(s => { (s.kelas || '').split(/[,;]+/).forEach(k => { const jj = k.trim(); if (/^(7|8|9)/.test(jj)) jenjangSet.add('smp'); if (/^(10|11|12)/.test(jj)) jenjangSet.add('sma'); }); });
       const jenjangArr = ['smp','sma'].filter(j => jenjangSet.has(j));
       let html = '<option value="">— Pilih Jenjang —</option>';
+      if (jenjangArr.length === 0 && appState.fillForList.length) html += '<option value="all">Semua Jenjang</option>';
       jenjangArr.forEach(j => { html += `<option value="${j}">${j === 'smp' ? 'SMP (7-9)' : 'SMA (10-12)'}</option>`; });
       $('bulkJenjang').innerHTML = html;
       $('bulkKelas').innerHTML = '<option value="">— Pilih Kelas —</option>';
@@ -983,7 +989,7 @@
       $('bulkPreview').classList.add('hidden'); $('bulkForm').classList.add('hidden');
       if (!j) { $('bulkKelas').innerHTML = '<option value="">— Pilih Kelas —</option>'; return; }
       const kelasSet = new Set();
-      appState.fillForList.forEach(s => { (s.kelas || '').split(/[,;]+/).forEach(k => { const kk = k.trim(); if (j === 'smp' && /^(7|8|9)/.test(kk)) kelasSet.add(kk); if (j === 'sma' && /^(10|11|12)/.test(kk)) kelasSet.add(kk); }); });
+      appState.fillForList.forEach(s => { (s.kelas || '').split(/[,;]+/).forEach(k => { const kk = k.trim(); if (!kk) return; if (j === 'all') kelasSet.add(kk); if (j === 'smp' && /^(7|8|9)/.test(kk)) kelasSet.add(kk); if (j === 'sma' && /^(10|11|12)/.test(kk)) kelasSet.add(kk); }); });
       const kelasArr = Array.from(kelasSet).sort((a,b) => a.localeCompare(b, undefined, { numeric: true }));
       let html = '<option value="">— Pilih Kelas —</option>';
       kelasArr.forEach(k => { html += `<option value="${esc(k)}">${esc(k)}</option>`; });
@@ -1010,30 +1016,18 @@
       const tanggal = $('tglInput').value || fmtLocal(new Date());
       const catatan = $('bulkCatatan').value || '';
       const get = id => $(id) && $(id).checked ? 'Ya' : 'Tidak';
-      const payloads = list.map(s => {
-        let poin = 0;
-        if (get('bulk_shubuh') === 'Ya') poin += 10;
-        if (get('bulk_dzuhur') === 'Ya') poin += 10;
-        if (get('bulk_ashar') === 'Ya') poin += 10;
-        if (get('bulk_maghrib') === 'Ya') poin += 10;
-        if (get('bulk_isya') === 'Ya') poin += 10;
-        if (get('bulk_bantuOrtu') === 'Ya') poin += 10;
-        if (get('bulk_bijakHP') === 'Ya') poin += 10;
-        if (get('bulk_belajar') === 'Ya') poin += 10;
-        if (get('bulk_tidur') === 'Ya') poin += 10;
-        if (get('bulk_tilawah') === 'Ya') poin += 20;
-        return {
-          role: 'siswa', nama: s.nama, tanggal, kelas: s.kelas || 'Siswa', totalPoin: poin,
-          isHaid: 'Tidak', shubuh: get('bulk_shubuh'), dzuhur: get('bulk_dzuhur'),
-          ashar: get('bulk_ashar'), maghrib: get('bulk_maghrib'), isya: get('bulk_isya'),
-          bantuOrtu: get('bulk_bantuOrtu'), bijakHP: get('bulk_bijakHP'),
-          belajar: get('bulk_belajar'), tidur: get('bulk_tidur'), tilawah: get('bulk_tilawah'), catatan
-        };
-      });
+      // Poin dihitung ulang oleh server; totalPoin di sini hanya informasi awal
+      const payloads = list.map(s => ({
+        role: 'siswa', nama: s.nama, tanggal, kelas: k, isHaid: 'Tidak',
+        shubuh: get('bulk_shubuh'), dzuhur: get('bulk_dzuhur'), ashar: get('bulk_ashar'),
+        maghrib: get('bulk_maghrib'), isya: get('bulk_isya'),
+        bantuOrtu: get('bulk_bantuOrtu'), bijakHP: get('bulk_bijakHP'),
+        belajar: get('bulk_belajar'), tidur: get('bulk_tidur'), tilawah: get('bulk_tilawah'), catatan
+      }));
       showToast('Menyimpan...', 'warning');
       try {
         const res = await gsRun('bulkSubmitMutabaah', payloads);
-        showToast((res && res.message) || 'Selesai', 'success');
+        showToast((res && res.message) || 'Selesai', res && res.success === false ? 'error' : 'success');
         closeModal('bulkModal');
         loadStatusData();
       } catch (e) { showToast('Gagal menyimpan massal.', 'error'); }
@@ -1086,7 +1080,7 @@
             labels: res.map(r => new Date(r.tgl).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric' })),
             datasets: [{ label: isTeacher ? 'Amalan Terisi' : 'Poin', data: res.map(r => r.val), borderColor: '#059669', backgroundColor: 'rgba(5, 150, 105, 0.1)', borderWidth: 2, fill: true, tension: 0.3, pointRadius: 3 }]
           },
-          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { beginAtZero: true, suggestedMax: isTeacher ? 12 : 110, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 9 } } } } }
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { beginAtZero: true, suggestedMax: isTeacher ? 9 : 110, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 9 } } } } }
         });
       } catch (e) {}
     }
@@ -1152,7 +1146,7 @@
       const gender = getEffectiveGender(); const role = getEffectiveRole();
       const isStaff = STAFF_ROLES.includes(role);
       const haidHtml = gender === 'P' ? `<div class="bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/40 p-3.5 rounded-2xl flex justify-between items-center mb-3"><span class="text-xs font-bold text-rose-800 dark:text-rose-400 flex items-center gap-2"><i class="fa-solid fa-droplet" aria-hidden="true"></i> Sedang Haid (Udzur Syar'i)</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="toggleHaid" aria-label="Sedang Haid" class="sr-only peer" onchange="handleHaidToggle()"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-rose-600"></div></label></div>` : '';
-      
+
       const shalatList = [
         { id: 'f_shubuh', label: 'Subuh', point: 10 },
         { id: 'f_dzuhur', label: 'Dzuhur', point: 10 },
@@ -1164,7 +1158,7 @@
         <div class="bg-white dark:bg-[#111827] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm mb-3">
           <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-500 mb-3 flex items-center gap-1.5"><i class="fa-solid fa-mosque" aria-hidden="true"></i> Shalat Fardhu 5 Waktu</div>
           <div class="grid grid-cols-1 sm:grid-cols-5 gap-2">
-            ${shalatList.map(s => `<label for="${s.id}" class="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 cursor-pointer"><span class="text-xs font-semibold text-slate-700 dark:text-slate-200">${esc(s.label)}</span><input type="checkbox" id="${s.id}" data-point="${s.point}" class="cb-hitung w-4 h-4 text-emerald-700 rounded focus:ring-emerald-500"></label>`).join('')}
+            ${shalatList.map(s => `<label for="${s.id}" class="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 cursor-pointer"><span class="text-xs font-semibold text-slate-700 dark:text-slate-200">${esc(s.label)}</span><input type="checkbox" id="${s.id}" data-point="${s.point}" class="cb-hitung w-4 h-4 text-emerald-700 rounded focus:ring-emerald-500" onchange="calculatePoints()"></label>`).join('')}
           </div>
         </div>`;
 
@@ -1195,7 +1189,7 @@
         { id: 'f_tidur', label: 'Tidur Awal (< Jam 22.00)', point: 10 },
         { id: 'f_tilawah', label: 'Tilawah Al-Quran', point: 20 }
       ];
-      
+
       let html = haidHtml + shalatBox + rawatibBox + `<div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 px-1 mb-1.5">Amalan Harian Lainnya</div>`;
       html += otherList.map(i => cardCb(i.id, i.label, i.point)).join('');
       container.innerHTML = html;
@@ -1236,30 +1230,31 @@
       const role = getEffectiveRole(); const nama = getEffectiveName();
       const isStaff = STAFF_ROLES.includes(role);
       const payload = { role, nama, tanggal, catatan: $('catatanForm').value, isHaid: appState.isHaid ? 'Ya' : 'Tidak' };
-      
-      ['shubuh','dzuhur','ashar','maghrib','isya'].forEach(k => { const el = $(`f_${k}`); payload[k] = el && el.checked ? 'Ya' : 'Tidak'; });
-      
-      payload.rawatib_shubuh_qab = $('f_rawatib_shubuh_qab') && $('f_rawatib_shubuh_qab').checked ? 'Ya' : 'Tidak';
-      payload.rawatib_dzuhur_qab = $('f_rawatib_dzuhur_qab') && $('f_rawatib_dzuhur_qab').checked ? 'Ya' : 'Tidak';
-      payload.rawatib_dzuhur_bad = $('f_rawatib_dzuhur_bad') && $('f_rawatib_dzuhur_bad').checked ? 'Ya' : 'Tidak';
-      payload.rawatib_maghrib_bad = $('f_rawatib_maghrib_bad') && $('f_rawatib_maghrib_bad').checked ? 'Ya' : 'Tidak';
-      payload.rawatib_isya_bad = $('f_rawatib_isya_bad') && $('f_rawatib_isya_bad').checked ? 'Ya' : 'Tidak';
+      const yn = id => $(id) && $(id).checked ? 'Ya' : 'Tidak';
+
+      ['shubuh','dzuhur','ashar','maghrib','isya'].forEach(k => { payload[k] = yn(`f_${k}`); });
+
+      payload.rawatib_shubuh_qab = yn('f_rawatib_shubuh_qab');
+      payload.rawatib_dzuhur_qab = yn('f_rawatib_dzuhur_qab');
+      payload.rawatib_dzuhur_bad = yn('f_rawatib_dzuhur_bad');
+      payload.rawatib_maghrib_bad = yn('f_rawatib_maghrib_bad');
+      payload.rawatib_isya_bad = yn('f_rawatib_isya_bad');
 
       if (isStaff) {
-        payload.dzikir = $('f_dzikir') && $('f_dzikir').checked ? 'Ya' : 'Tidak';
-        payload.tilawah_5lbr = $('f_tilawah_5lbr') && $('f_tilawah_5lbr').checked ? 'Ya' : 'Tidak';
-        payload.qiyamullail = $('f_qiyamullail') && $('f_qiyamullail').checked ? 'Ya' : 'Tidak';
-        payload.ibadah_sunnah = $('f_ibadah_sunnah') && $('f_ibadah_sunnah').checked ? 'Ya' : 'Tidak';
+        payload.dzikir = yn('f_dzikir');
+        payload.tilawah_5lbr = yn('f_tilawah_5lbr');
+        payload.qiyamullail = yn('f_qiyamullail');
+        payload.ibadah_sunnah = yn('f_ibadah_sunnah');
       } else {
         payload.kelas = getEffectiveKelas();
-        payload.totalPoin = $('liveScore').innerText;
-        payload.bantuOrtu = $('f_bantuOrtu') && $('f_bantuOrtu').checked ? 'Ya' : 'Tidak';
-        payload.bijakHP = $('f_bijakHP') && $('f_bijakHP').checked ? 'Ya' : 'Tidak';
-        payload.belajar = $('f_belajar') && $('f_belajar').checked ? 'Ya' : 'Tidak';
-        payload.tidur = $('f_tidur') && $('f_tidur').checked ? 'Ya' : 'Tidak';
-        payload.tilawah = $('f_tilawah') && $('f_tilawah').checked ? 'Ya' : 'Tidak';
+        payload.totalPoin = $('liveScore').innerText; // hanya informasi; server menghitung ulang
+        payload.bantuOrtu = yn('f_bantuOrtu');
+        payload.bijakHP = yn('f_bijakHP');
+        payload.belajar = yn('f_belajar');
+        payload.tidur = yn('f_tidur');
+        payload.tilawah = yn('f_tilawah');
       }
-      
+
       if (!navigator.onLine) {
         appState.offlineQueue.push(payload);
         localStorage.setItem('myq_queue', JSON.stringify(appState.offlineQueue));
@@ -1270,7 +1265,7 @@
         const res = await gsRun('submitMutabaah', payload);
         if (res && res.success) {
           showToast(res.message);
-          if (res.streak !== undefined) { $('streakBanner').classList.remove('hidden'); $('streakCount').innerText = res.streak; }
+          if (res.streak !== undefined && appState.userRole === 'siswa' && !appState.fillFor) $('streakCount').innerText = res.streak;
           resetForm(); loadPersonalHistoryChart(); loadNotifBadge(); loadDashboardStats();
         } else showToast((res && res.message) || 'Gagal menyimpan.', 'error');
       } catch (e) {
@@ -1319,7 +1314,7 @@
       Object.values(btnMap).forEach(id => { const el = $(id); if (el) el.className = "px-4 py-2.5 font-bold text-xs text-slate-600 whitespace-nowrap transition"; });
       const ab = $(btnMap[tabId]); if (ab) ab.className = "px-4 py-2.5 font-bold text-xs text-emerald-700 border-b-2 border-emerald-700 whitespace-nowrap transition";
       const ac = $(contentMap[tabId]); if (ac) ac.classList.remove('hidden');
-      const showFilter = ['tabSiswa','tabGuru'].includes(tabId);
+      const showFilter = ['tabLeaderboard','tabSiswa','tabGuru','tabCompare'].includes(tabId);
       $('reportFilterBar').style.display = showFilter ? '' : 'none';
       if (tabId === 'tabStatus') loadStatusData();
       else if (tabId === 'tabStreak') loadStreakLeaderboard();
@@ -1339,6 +1334,7 @@
     }
 
     async function loadReportData() {
+      if (appState.currentTab === 'tabCompare') return loadCompareChart();
       const fKls = ($('filterKelas') && $('filterKelas').value) || 'all';
       const fGender = ($('filterGender') && $('filterGender').value) || 'all';
       const sDate = ($('filterStart') && $('filterStart').value) || '';
@@ -1346,14 +1342,14 @@
       const searchQuery = ($('searchStudent') && $('searchStudent').value) || '';
       const tab = appState.currentTab;
       const roleTarget = tab === 'tabGuru' ? 'guru' : 'siswa';
-      
+
       if (tab === 'tabSiswa') $('tableBodySiswa').innerHTML = '<tr><td colspan="20" class="text-center p-6 text-slate-500">Memuat rekap...</td></tr>';
       else if (tab === 'tabGuru') $('tableBodyGuru').innerHTML = '<tr><td colspan="14" class="text-center p-6 text-slate-500">Memuat rekap...</td></tr>';
-      
+
       try {
         const res = await gsRun('getReportData', fKls, sDate, eDate, roleTarget, searchQuery, fGender);
         appState.lastReportData = res;
-        
+
         if (tab === 'tabSiswa' && roleTarget === 'siswa') {
           $('tableBodySiswa').innerHTML = ((res && res.table) || []).map(r => `
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50">
@@ -1365,13 +1361,14 @@
             </tr>`).join('') ||
             '<tr><td colspan="20" class="text-center p-6 text-slate-500">Tidak ada data ditemukan.</td></tr>';
         } else if (tab === 'tabGuru' && roleTarget === 'guru') {
+          // kolom server: 0 Haid, 1-5 shalat fardhu, 6-10 rawatib (diringkas jadi n/5), 11+ dzikir dst
           $('tableBodyGuru').innerHTML = ((res && res.table) || []).map(r => `
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50">
               <td class="p-3 text-slate-500">${esc(new Date(r.tgl).toLocaleDateString('id-ID'))}</td>
               <td class="p-3">${renderNameClickable(r.nama, 'guru')}</td>
               ${(r.cols || []).map((c, idx) => {
-                if (idx >= 6 && idx <= 10) return '';
-                if (idx === 11) {
+                if (idx >= 7 && idx <= 10) return '';
+                if (idx === 6) {
                   const rawatibCount = r.cols.slice(6, 11).filter(x => x === 'Ya').length;
                   return `<td class="p-3 text-center font-bold">${rawatibCount}/5</td>`;
                 }
@@ -1380,7 +1377,7 @@
             </tr>`).join('') ||
             '<tr><td colspan="14" class="text-center p-6 text-slate-500">Tidak ada data ditemukan.</td></tr>';
         }
-        
+
         if (tab === 'tabLeaderboard') {
           let html = ''; const labels = [], data = [];
           ((res && res.leaderboard) || []).forEach((item, index) => {
@@ -1396,7 +1393,7 @@
 
     async function exportCSV() {
       const tab = appState.currentTab;
-      if (!['tabSiswa','tabGuru'].includes(tab)) return showToast('Export hanya untuk tab rekap.', 'warning');
+      if (!['tabLeaderboard','tabSiswa','tabGuru','tabCompare'].includes(tab)) return showToast('Export hanya untuk tab rekap.', 'warning');
       const roleTarget = tab === 'tabGuru' ? 'guru' : 'siswa';
       const fKls = ($('filterKelas') && $('filterKelas').value) || 'all';
       const fGender = ($('filterGender') && $('filterGender').value) || 'all';
@@ -1424,7 +1421,7 @@
         const res = await gsRun('getStudentTimeline', nama, role, 30);
         if (!res || !res.length) { $('historyContent').innerHTML = '<div class="text-center p-6 text-slate-500">Belum ada riwayat.</div>'; return; }
         const html = res.map(d => {
-          const itemChips = d.itemKeys.map(k => `<span class="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded ${d.items[k] ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 line-through'}">${d.items[k] ? '✓' : '×'} ${esc(k)}</span>`).join('');
+          const itemChips = d.itemKeys.map(k => `<span class="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded ${d.items[k] ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 line-through'}">${d.items[k] ? '✓' : '×'} ${esc(ITEM_LABELS[k] || k)}</span>`).join('');
           const tglFmt = new Date(d.tgl).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' });
           const poinStr = d.isTeacher ? '' : `<span class="text-xs font-black text-emerald-700">${d.poin}</span>`;
           const haidStr = d.haid ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-bold">Haid</span>' : '';
@@ -1465,6 +1462,7 @@
       try {
         const res = await gsRun('getMyNotif', appState.username, appState.userName, appState.userRole);
         appState.notifData = res;
+        if (res && res.streak !== undefined) $('streakCount').innerText = res.streak;
         if (res && res.unread > 0) { $('notifBadge').classList.remove('hidden'); $('notifBadge').innerText = res.unread; }
         else $('notifBadge').classList.add('hidden');
       } catch (e) {}
@@ -1483,7 +1481,8 @@
       const role = appState.userRole;
       const roleLabel = { admin: 'Administrator', guru: 'Guru', wali: 'Wali Kelas', musyrif: 'Musyrif', siswa: 'Siswa' }[role] || role;
       const genderLabel = appState.gender === 'P' ? 'Akhwat (P)' : 'Ikhwan (L)';
-      const kelasStr = appState.kelasBinaan && appState.kelasBinaan.length ? appState.kelasBinaan.join(', ') : '-';
+      const kelasArr = toKelasArray(appState.kelasBinaan);
+      const kelasStr = kelasArr.length ? kelasArr.join(', ') : '-';
       const initial = (appState.userName || '?').substring(0, 1).toUpperCase();
       $('profileBody').innerHTML = `
         <div class="text-center">
@@ -1544,20 +1543,20 @@
       try {
         const res = await gsRun('getDailyFillStatus', tanggal, kelas, appState.userRole, appState.kelasBinaan, status, search);
         appState.lastStatusData = res;
-        
+
         if (!res || !res.summary) { $('statusList').innerHTML = `<div class="text-center p-6 text-rose-600">Gagal memuat data.</div>`; return; }
-        
+
         const pct = res.summary.total ? Math.round(res.summary.sudah / res.summary.total * 100) : 0;
         $('statusSummary').innerHTML = `<div class="flex flex-wrap items-center gap-2 text-xs"><span class="px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-400 rounded-lg font-bold">✅ Sudah: ${res.summary.sudah}</span><span class="px-3 py-1.5 bg-rose-100 dark:bg-rose-900/40 text-rose-800 dark:text-rose-400 rounded-lg font-bold">❌ Belum: ${res.summary.belum}</span><span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg font-bold">📊 Total: ${res.summary.total} (${pct}% sudah isi)</span></div>`;
-        
+
         if (!res.list.length) { $('statusList').innerHTML = '<div class="text-center p-6 text-slate-500">Tidak ada siswa di filter ini.</div>'; return; }
-        
+
         let html = '<div class="overflow-x-auto"><table class="w-full text-xs text-left print-table"><thead class="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 uppercase tracking-wider font-bold"><tr><th class="p-3">No</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3 text-center">Status</th><th class="p-3 text-center">Poin</th></tr></thead><tbody class="divide-y divide-slate-100 dark:divide-slate-800">';
         res.list.forEach((s, i) => {
           const badge = s.sudah ? '<span class="text-emerald-700 font-bold"><i class="fa-solid fa-check" aria-hidden="true"></i> Sudah</span>' : '<span class="text-rose-700 font-bold"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Belum</span>';
           const rowBg = s.sudah ? '' : 'bg-rose-50/40 dark:bg-rose-950/10';
           const safeJs = JSON.stringify(s.nama).replace(/"/g, '&quot;');
-          html += `<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 ${rowBg}"><td class="p-3 text-slate-500">${i + 1}</td><td class="p-3 font-bold"><button onclick="showStudentHistory(${safeJs}, 'siswa')" class="hover:text-emerald-700">${esc(s.nama)} <i class="fa-solid fa-clock-rotate-left text-[9px] opacity-50" aria-hidden="true"></i></button></td><td class="p-3">${esc(s.kelas || '-')}</td><td class="p-3 text-center">${badge}</td><td class="p-3 text-center font-extrabold text-emerald-700">${s.sudah ? (res.lastStatusData && res.lastStatusData.data ? 0 : 0) : '-'}</td></tr>`;
+          html += `<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 ${rowBg}"><td class="p-3 text-slate-500">${i + 1}</td><td class="p-3 font-bold"><button onclick="showStudentHistory(${safeJs}, 'siswa')" class="hover:text-emerald-700">${esc(s.nama)} <i class="fa-solid fa-clock-rotate-left text-[9px] opacity-50" aria-hidden="true"></i></button></td><td class="p-3">${esc(s.kelas || '-')}</td><td class="p-3 text-center">${badge}</td><td class="p-3 text-center font-extrabold text-emerald-700">${s.sudah ? esc(s.poin) : '-'}</td></tr>`;
         });
         html += '</tbody></table></div>';
         $('statusList').innerHTML = html;
@@ -1626,7 +1625,7 @@
       const n = $('className').value.trim(); if (!n) return;
       try {
         const res = await gsRun('saveClass', '', n);
-        showToast((res && res.message) || 'Tersimpan');
+        showToast((res && res.message) || 'Tersimpan', res && res.success === false ? 'error' : 'success');
         $('className').value = '';
         openClassModal(); loadFilterClasses(); loadFillForOptions();
       } catch (e) { showToast('Gagal.', 'error'); }
@@ -1675,7 +1674,7 @@
       try {
         const teachers = await gsRun('getTeachers');
         appState.allTeachersCache = teachers || [];
-        $('teacherTableBody').innerHTML = (teachers || []).map(s => `<tr><td class="p-2"><b>${esc(s.nama)}</b><span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400 ml-1">${esc(s.role || 'guru')}</span><br><span class="text-[10px] text-slate-500">@${esc(s.username)} · ${esc(s.kelas || '-')} · ${esc(s.gender)}</span></td><td class="p-2 text-right"><button onclick="confirmDelTeacher('${esc(s.id)}')" aria-label="Hapus Guru" class="text-rose-600"><i class="fa-solid fa-trash" aria-hidden="true"></i></button></td></tr>`).join('') || '<tr><td colspan="2" class="text-center p-3 text-slate-500 text-xs">Belum ada akun guru.</td></tr>';
+        $('teacherTableBody').innerHTML = (teachers || []).map(s => `<tr><td class="p-2"><b>${esc(s.nama)}</b><span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400 ml-1">${esc(s.role || 'guru')}</span><br><span class="text-[10px] text-slate-500">@${esc(s.username)} · ${esc(s.kelas || '-')} · ${esc(s.gender)}</span></td><td class="p-2 text-right"><button onclick="confirmDelTeacher('${esc(s.username)}')" aria-label="Hapus Guru" class="text-rose-600"><i class="fa-solid fa-trash" aria-hidden="true"></i></button></td></tr>`).join('') || '<tr><td colspan="2" class="text-center p-3 text-slate-500 text-xs">Belum ada akun guru.</td></tr>';
       } catch (e) {}
     }
     async function saveTeacherData() {
@@ -1698,7 +1697,7 @@
     }
     function confirmDelTeacher(id) {
       showCustomConfirm('Hapus Akun Guru', 'Yakin menghapus akun guru ini?', async () => {
-        try { const res = await gsRun('deleteTeacher', id); showToast((res && res.message) || 'Terhapus'); openTeacherModal(); } catch (e) {}
+        try { const res = await gsRun('deleteTeacher', id); showToast((res && res.message) || 'Terhapus', res && res.success === false ? 'error' : 'success'); openTeacherModal(); } catch (e) {}
       });
     }
 
