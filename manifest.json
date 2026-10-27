@@ -1,0 +1,24 @@
+{
+  "name": "Mutabaah Yaumiyah",
+  "short_name": "Mutabaah",
+  "description": "Sistem Monitoring Ibadah Harian Siswa & Guru",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#047857",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Mosque_icon.svg/512px-Mosque_icon.svg.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Mosque_icon.svg/512px-Mosque_icon.svg.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -613,7 +613,7 @@ function renderFormInputs() {
     { id: 'f_dzikir', label: 'Dzikir Pagi & Petang', desc: '' },
     { id: 'f_tilawah_5lbr', label: 'Tilawah 5 Lembar', desc: '' },
     { id: 'f_qiyamullail', label: 'Qiyamullail', desc: '(Mendoakan Kebaikan Yayasan)' },
-    { id: 'f_ibadah_sunnah', label: 'Ibadah Sunnah', desc: '(Dhuha/Puasa/Infaq)' } // PERUBAHAN TEKS
+    { id: 'f_ibadah_sunnah', label: 'Ibadah Sunnah', desc: '(Dhuha/Puasa/Infaq)' }
   ] : [
     { id: 'f_bantuOrtu', label: 'Membantu Orang Tua', desc: '', point: 10 },
     { id: 'f_bijakHP', label: 'Bijak Gadget (< 2 Jam)', desc: '', point: 10 },
@@ -1185,5 +1185,20 @@ function confirmArchive() {
         loadReportData();
       } catch (e) {}
     });
+  });
+}
+
+// ==========================================
+// FITUR PWA: REGISTRASI SERVICE WORKER
+// ==========================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then((reg) => {
+        console.log('Service Worker berhasil didaftarkan. Scope:', reg.scope);
+      })
+      .catch((err) => {
+        console.error('Service Worker gagal didaftarkan:', err);
+      });
   });
 }
