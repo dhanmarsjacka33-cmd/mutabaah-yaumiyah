@@ -8,6 +8,9 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   
+  <!-- Favicon Emoji untuk menghilangkan error 404 -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕌</text></svg>">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
@@ -571,6 +574,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
   <script>
+    // PASTIKAN URL INI ADALAH URL /exec MILIK ANDA
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbw-SQoNpwzi4olglFMIc_Bs5zAyCvhIurbfaXJZhehGdeaH4mP5_H5AlFYCzyisDSgR/exec';
 
     const $ = id => document.getElementById(id);
@@ -676,7 +680,6 @@
         if (cached && Date.now() - cached.ts < CACHE_TTL && cached.timings) { renderPrayerWidget(cached.timings); return; }
       } catch (e) {}
       try {
-        // PERBAIKAN: Ubah 'Bogor' sesuai lokasi
         const res = await gsRun('getPrayerTimes', 'Bogor', 'ID');
         if (res && res.success && res.timings) {
           localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), timings: res.timings }));
@@ -817,7 +820,7 @@
         list.forEach(s => {
           (s.kelas || '').split(/[,;]+/).forEach(k => {
             const kk = k.trim();
-            if (!kk) return; // Mencegah kelas kosong
+            if (!kk) return;
             if (/^(7|8|9)/.test(kk)) jenjangSet.add('smp');
             if (/^(10|11|12)/.test(kk)) jenjangSet.add('sma');
           });
@@ -855,7 +858,7 @@
       appState.fillForList.forEach(s => {
         (s.kelas || '').split(/[,;]+/).forEach(k => {
           const kk = k.trim();
-          if (!kk) return; // Mencegah kelas kosong
+          if (!kk) return;
           if (j === 'all') { kelasSet.add(kk); return; }
           if (j === 'smp' && /^(7|8|9)/.test(kk)) kelasSet.add(kk);
           if (j === 'sma' && /^(10|11|12)/.test(kk)) kelasSet.add(kk);
@@ -1123,7 +1126,7 @@
         $('statsCard').classList.remove('hidden');
       } else if (appState.userRole === 'wali' || appState.userRole === 'musyrif') {
         $('btnTabStatus').classList.remove('hidden');
-      } else if (appState.userRole === 'siswa') {
+      } else if (appState.userRole === 'siswa' || appState.userRole === 'murid') {
         $('poinContainer').classList.remove('hidden');
         $('streakBanner').classList.remove('hidden');
       }
@@ -1173,28 +1176,31 @@
         </div>`;
 
       const otherList = isStaff ? [
-        { id: 'f_dzikir', label: 'Dzikir Pagi & Petang' },
-        { id: 'f_tilawah_5lbr', label: 'Tilawah 5 Lembar' },
-        { id: 'f_qiyamullail', label: 'Qiyamullail' },
-        { id: 'f_ibadah_sunnah', label: 'Ibadah Sunnah' }
+        { id: 'f_dzikir', label: 'Dzikir Pagi & Petang', desc: '' },
+        { id: 'f_tilawah_5lbr', label: 'Tilawah 5 Lembar', desc: '' },
+        { id: 'f_qiyamullail', label: 'Qiyamullail', desc: '(Mendoakan Kebaikan Yayasan)' },
+        { id: 'f_ibadah_sunnah', label: 'Ibadah Sunnah', desc: '(Dhuha, Puasa, Infaq)' }
       ] : [
-        { id: 'f_bantuOrtu', label: 'Membantu Orang Tua', point: 10 },
-        { id: 'f_bijakHP', label: 'Bijak Gadget (< 2 Jam)', point: 10 },
-        { id: 'f_belajar', label: 'Murajaah / Belajar Mandiri', point: 10 },
-        { id: 'f_tidur', label: 'Tidur Awal (< Jam 22.00)', point: 10 },
-        { id: 'f_tilawah', label: 'Tilawah Al-Quran', point: 20 }
+        { id: 'f_bantuOrtu', label: 'Membantu Orang Tua', desc: '', point: 10 },
+        { id: 'f_bijakHP', label: 'Bijak Gadget (< 2 Jam)', desc: '', point: 10 },
+        { id: 'f_belajar', label: 'Murajaah / Belajar Mandiri', desc: '', point: 10 },
+        { id: 'f_tidur', label: 'Tidur Awal (< Jam 22.00)', desc: '', point: 10 },
+        { id: 'f_tilawah', label: 'Tilawah Al-Quran', desc: '(minimal 1 lembar)', point: 20 }
       ];
       
       let html = haidHtml + shalatBox + rawatibBox + `<div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 px-1 mb-1.5">Amalan Harian Lainnya</div>`;
-      html += otherList.map(i => cardCb(i.id, i.label, i.point)).join('');
+      html += otherList.map(i => cardCb(i.id, i.label, i.desc, i.point)).join('');
       container.innerHTML = html;
       calculatePoints();
     }
 
-    function cardCb(id, label, point) {
+    function cardCb(id, label, desc, point) {
       const attr = point ? `data-point="${point}" class="cb-hitung sr-only peer"` : `class="sr-only peer"`;
       return `<label for="${id}" class="flex items-center justify-between p-3.5 bg-white dark:bg-[#111827] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer">
-        <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">${esc(label)}</span>
+        <div class="flex flex-col">
+          <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">${esc(label)}</span>
+          ${desc ? `<span class="text-[9px] text-slate-500 dark:text-slate-400 mt-0.5">${esc(desc)}</span>` : ''}
+        </div>
         <div class="relative inline-flex items-center cursor-pointer">
           <input type="checkbox" id="${id}" ${attr} onchange="calculatePoints()">
           <div class="w-10 h-6 bg-slate-200 dark:bg-slate-800 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-700"></div>
