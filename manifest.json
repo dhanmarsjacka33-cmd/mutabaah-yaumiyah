@@ -9,23 +9,23 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2811/2811818.png",
+      "src": "https://placehold.co/192x192/047857/ffffff.png?text=Mutabaah",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2811/2811818.png",
+      "src": "https://placehold.co/512x512/047857/ffffff.png?text=Mutabaah",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ],
   "screenshots": [
     {
-      "src": "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=600&auto=format&fit=crop",
+      "src": "https://placehold.co/600x1066/047857/ffffff.png?text=Screenshot+App",
       "sizes": "600x1066",
-      "type": "image/jpeg",
+      "type": "image/png",
       "form_factor": "narrow",
       "label": "Formulir Mutabaah"
     }
