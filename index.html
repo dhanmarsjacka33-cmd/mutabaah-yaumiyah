@@ -225,6 +225,7 @@
       <button onclick="switchTab('tabSiswa')" id="btnTabSiswa" class="hidden px-4 py-2.5 font-bold text-xs text-slate-600 hover:text-slate-800 dark:hover:text-slate-200 whitespace-nowrap transition">📝 Rekap Siswa</button>
       <button onclick="switchTab('tabGuru')" id="btnTabGuru" class="hidden px-4 py-2.5 font-bold text-xs text-slate-600 hover:text-slate-800 dark:hover:text-slate-200 whitespace-nowrap transition">📋 Rekap Guru</button>
       <button onclick="switchTab('tabStatus')" id="btnTabStatus" class="hidden px-4 py-2.5 font-bold text-xs text-slate-600 hover:text-slate-800 dark:hover:text-slate-200 whitespace-nowrap transition">✅ Status Harian</button>
+      <button onclick="switchTab('tabStatusGuru')" id="btnTabStatusGuru" class="hidden px-4 py-2.5 font-bold text-xs text-slate-600 hover:text-slate-800 dark:hover:text-slate-200 whitespace-nowrap transition">👨‍🏫 Status Guru</button>
     </div>
 
     <div id="printArea" class="bg-white dark:bg-[#111827] p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
@@ -314,6 +315,14 @@
         <div id="statusList"></div>
       </div>
 
+      <div id="contentStatusGuru" class="hidden space-y-3">
+        <div class="no-print flex flex-wrap gap-2 items-center bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+          <input type="date" id="statusGuruDate" aria-label="Pilih Tanggal Status Guru" onchange="loadTeacherStatusData()" class="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg outline-none text-xs">
+          <input type="text" id="statusGuruSearch" aria-label="Cari Nama Guru" placeholder="Cari nama guru..." oninput="loadTeacherStatusData()" class="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg outline-none text-xs w-full md:w-64">
+        </div>
+        <div id="statusGuruSummary"></div>
+        <div id="statusGuruList"></div>
+      </div>
       <div id="contentGuru" class="hidden overflow-x-auto">
         <table class="w-full text-xs text-left print-table">
           <thead class="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 uppercase tracking-wider font-bold">

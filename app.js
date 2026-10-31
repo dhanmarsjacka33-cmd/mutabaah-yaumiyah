@@ -15,6 +15,7 @@ function buildParams(fn, args) {
     case 'getMutabaahEntry': return { nama: args[0], tanggal: args[1], role: args[2] };
     case 'getReportData': return { kelasFilter: args[0], startDate: args[1], endDate: args[2], roleTarget: args[3], searchQuery: args[4], genderFilter: args[5], page: args[6], limit: args[7] };
     case 'getDailyFillStatus': return { tanggal: args[0], kelasFilter: args[1], userRole: args[2], userKelasBinaan: args[3], statusFilter: args[4], searchQuery: args[5] };
+    case 'getTeacherFillStatus': return { tanggal: args[0], searchQuery: args[1] };
     case 'getPersonalHistory': return { nama: args[0], role: args[1] };
     case 'getClassComparison': return { startDate: args[0], endDate: args[1] };
     case 'getMyNotif': return { username: args[0], nama: args[1], role: args[2] };
@@ -183,7 +184,7 @@ function handleLogout() {
   try { if (compareChartInstance) { compareChartInstance.destroy(); compareChartInstance = null; } } catch (e) {}
   ['view-main','view-dashboard'].forEach(id => $(id).classList.add('hidden'));
   $('view-login').classList.remove('hidden');
-  ['logoutBtn','bottomNav','adminControls','btnTabGuru','btnTabSiswa','btnTabStatus','btnTabCompare','streakBanner','poinContainer','fillForCard','notifBtn','profileBtn','statsCard'].forEach(id => $(id).classList.add('hidden'));
+  ['logoutBtn','bottomNav','adminControls','btnTabGuru','btnTabSiswa','btnTabStatus','btnTabStatusGuru','btnTabCompare','streakBanner','poinContainer','fillForCard','notifBtn','profileBtn','statsCard'].forEach(id => $(id).classList.add('hidden'));
   $('loginUser').value = ''; $('loginPin').value = '';
   $('catatanForm').value = ''; $('formChecklist').innerHTML = '';
   $('headerInfo').innerText = 'Sistem Monitoring Ibadah';
@@ -212,6 +213,7 @@ function loginSuccessSetup() {
   $('filterEnd').valueAsDate = today;
   $('filterStart').valueAsDate = lastWeek;
   const sd = $('statusDate'); if (sd) sd.value = fmtLocal(today);
+  const sgd = $('statusGuruDate'); if (sgd) sgd.value = fmtLocal(today);
   setupRoleBasedUI();
   loadPersonalHistoryChart();
   loadFilterClasses();
@@ -556,6 +558,7 @@ function setupRoleBasedUI() {
     $('btnTabGuru').classList.remove('hidden');
     $('btnTabSiswa').classList.remove('hidden');
     $('btnTabStatus').classList.remove('hidden');
+    $('btnTabStatusGuru').classList.remove('hidden');
     $('btnTabCompare').classList.remove('hidden');
     $('statsCard').classList.remove('hidden');
   } else if (appState.userRole === 'wali' || appState.userRole === 'musyrif') {
@@ -739,20 +742,33 @@ function switchTab(tabId) {
   const isBulkUser = isAdmin || appState.userRole === 'wali' || appState.userRole === 'musyrif';
   const allowed = ['tabLeaderboard','tabStreak'];
   if (isAdmin) allowed.push('tabSiswa','tabGuru','tabCompare');
-  if (isBulkUser) allowed.push('tabStatus');
+  if (isBulkUser) allowed.push('tabStatus', 'tabStatusGuru'); 
   if (!allowed.includes(tabId)) return;
   appState.currentTab = tabId;
-  appState.reportPage = 1; // Reset page on tab switch
+  appState.reportPage = 1; 
   
-  const contentMap = { tabLeaderboard: 'contentLeaderboard', tabStreak: 'contentStreak', tabCompare: 'contentCompare', tabSiswa: 'contentSiswa', tabGuru: 'contentGuru', tabStatus: 'contentStatus' };
-  const btnMap = { tabLeaderboard: 'btnTabLB', tabStreak: 'btnTabStreak', tabCompare: 'btnTabCompare', tabSiswa: 'btnTabSiswa', tabGuru: 'btnTabGuru', tabStatus: 'btnTabStatus' };
+  const contentMap = { 
+    tabLeaderboard: 'contentLeaderboard', tabStreak: 'contentStreak', tabCompare: 'contentCompare', 
+    tabSiswa: 'contentSiswa', tabGuru: 'contentGuru', tabStatus: 'contentStatus', tabStatusGuru: 'contentStatusGuru' 
+  };
+  const btnMap = { 
+    tabLeaderboard: 'btnTabLB', tabStreak: 'btnTabStreak', tabCompare: 'btnTabCompare', 
+    tabSiswa: 'btnTabSiswa', tabGuru: 'btnTabGuru', tabStatus: 'btnTabStatus', tabStatusGuru: 'btnTabStatusGuru' 
+  };
+  
   Object.values(contentMap).forEach(id => $(id).classList.add('hidden'));
   Object.values(btnMap).forEach(id => { const el = $(id); if (el) el.className = "px-4 py-2.5 font-bold text-xs text-slate-600 whitespace-nowrap transition"; });
-  const ab = $(btnMap[tabId]); if (ab) ab.className = "px-4 py-2.5 font-bold text-xs text-emerald-700 border-b-2 border-emerald-700 whitespace-nowrap transition";
-  const ac = $(contentMap[tabId]); if (ac) ac.classList.remove('hidden');
+  
+  const ab = $(btnMap[tabId]); 
+  if (ab) ab.className = "px-4 py-2.5 font-bold text-xs text-emerald-700 border-b-2 border-emerald-700 whitespace-nowrap transition";
+  const ac = $(contentMap[tabId]); 
+  if (ac) ac.classList.remove('hidden');
+  
   const showFilter = ['tabSiswa','tabGuru'].includes(tabId);
   $('reportFilterBar').style.display = showFilter ? '' : 'none';
+  
   if (tabId === 'tabStatus') loadStatusData();
+  else if (tabId === 'tabStatusGuru') loadTeacherStatusData(); 
   else if (tabId === 'tabStreak') loadStreakLeaderboard();
   else if (tabId === 'tabCompare') loadCompareChart();
   else loadReportData();
@@ -1024,6 +1040,56 @@ async function loadStatusData() {
     html += '</tbody></table></div>';
     $('statusList').innerHTML = html;
   } catch (e) { $('statusList').innerHTML = '<div class="text-center p-6 text-rose-600">Error memuat data.</div>'; }
+}
+
+async function loadTeacherStatusData() {
+  const tanggal = $('statusGuruDate').value || fmtLocal(new Date());
+  const search = $('statusGuruSearch').value;
+  
+  $('statusGuruSummary').innerHTML = '';
+  $('statusGuruList').innerHTML = '<div class="text-center p-6 text-slate-500">Memuat data guru...</div>';
+  
+  try {
+    const res = await gsRun('getTeacherFillStatus', tanggal, search);
+    
+    if (!res || !res.summary) { 
+      $('statusGuruList').innerHTML = `<div class="text-center p-6 text-rose-600">Gagal memuat data.</div>`; 
+      return; 
+    }
+    
+    const pct = res.summary.total ? Math.round(res.summary.sudah / res.summary.total * 100) : 0;
+    $('statusGuruSummary').innerHTML = `
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <span class="px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-400 rounded-lg font-bold">✅ Sudah Isi: ${res.summary.sudah}</span>
+        <span class="px-3 py-1.5 bg-rose-100 dark:bg-rose-900/40 text-rose-800 dark:text-rose-400 rounded-lg font-bold">❌ Belum: ${res.summary.belum}</span>
+        <span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg font-bold">📊 Total Guru: ${res.summary.total} (${pct}%)</span>
+      </div>`;
+    
+    if (!res.list.length) { 
+      $('statusGuruList').innerHTML = '<div class="text-center p-6 text-slate-500">Tidak ada data guru.</div>'; 
+      return; 
+    }
+    
+    let html = '<div class="overflow-x-auto"><table class="w-full text-xs text-left print-table"><thead class="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 uppercase tracking-wider font-bold"><tr><th class="p-3">No</th><th class="p-3">Nama Guru / Staff</th><th class="p-3">Username</th><th class="p-3 text-center">Status</th></tr></thead><tbody class="divide-y divide-slate-100 dark:divide-slate-800">';
+    
+    res.list.forEach((s, i) => {
+      const badge = s.sudah 
+        ? '<span class="text-emerald-700 font-bold"><i class="fa-solid fa-check" aria-hidden="true"></i> Sudah</span>' 
+        : '<span class="text-rose-700 font-bold"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Belum</span>';
+      const rowBg = s.sudah ? '' : 'bg-rose-50/40 dark:bg-rose-950/10';
+      
+      html += `<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 ${rowBg}">
+        <td class="p-3 text-slate-500">${i + 1}</td>
+        <td class="p-3 font-bold">${esc(s.nama)}</td>
+        <td class="p-3 text-slate-500">@${esc(s.username)}</td>
+        <td class="p-3 text-center">${badge}</td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    $('statusGuruList').innerHTML = html;
+  } catch (e) { 
+    $('statusGuruList').innerHTML = '<div class="text-center p-6 text-rose-600">Error memuat data guru.</div>'; 
+  }
 }
 
 function copyBelumIsi() {
