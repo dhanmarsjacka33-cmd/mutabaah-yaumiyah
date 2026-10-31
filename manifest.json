@@ -1,0 +1,33 @@
+{
+  "name": "Mutabaah Yaumiyah",
+  "short_name": "Mutabaah",
+  "description": "Sistem Monitoring Ibadah Harian Siswa & Guru",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#047857",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://placehold.co/600x1066/047857/ffffff.png?text=Screenshot+App",
+      "sizes": "600x1066",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Formulir Mutabaah"
+    }
+  ]
+}
