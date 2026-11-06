@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mutabaah-cache-v2'; // Versi dinaikkan agar cache lama terhapus
+const CACHE_NAME = 'mutabaah-cache-v3'; // Versi dinaikkan agar cache lama terhapus
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

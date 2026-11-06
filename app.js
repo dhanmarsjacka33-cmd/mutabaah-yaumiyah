@@ -522,18 +522,37 @@ async function loadPersonalHistoryChart() {
 
 function setupDateRestrictions() {
   const tglInput = $('tglInput'); if (!tglInput) return;
+  
+  // Kalkulasi tanggal secara presisi
   const today = new Date();
-  const sevenDaysAgo = new Date(Date.now() - (7 * 86400000));
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(today.getDate() - 7);
+  
+  // Atur batas minimal dan maksimal untuk semua role
   tglInput.max = fmtLocal(today); 
   tglInput.min = fmtLocal(sevenDaysAgo);
-  tglInput.value = fmtLocal(today);
+  
+  // Set nilai default ke hari ini
+  if(!tglInput.value) tglInput.value = fmtLocal(today);
 }
+
 function validateDateLock() {
   const tglInput = $('tglInput'); const val = tglInput.value;
-  const today = fmtLocal(new Date()); 
-  const sevenDaysAgo = fmtLocal(new Date(Date.now() - (7 * 86400000)));
-  if (val > today) { showToast('Tidak dapat mengisi tanggal di masa depan!', 'error'); tglInput.value = today; }
-  else if (val < sevenDaysAgo) { showToast('Maksimal pengisian hanya 7 hari ke belakang.', 'error'); tglInput.value = sevenDaysAgo; }
+  
+  const todayObj = new Date();
+  const sevenDaysAgoObj = new Date();
+  sevenDaysAgoObj.setDate(todayObj.getDate() - 7);
+  
+  const today = fmtLocal(todayObj); 
+  const sevenDaysAgo = fmtLocal(sevenDaysAgoObj);
+  
+  if (val > today) { 
+    showToast('Tidak dapat mengisi tanggal di masa depan!', 'error'); 
+    tglInput.value = today; 
+  } else if (val < sevenDaysAgo) { 
+    showToast('Maksimal pengisian hanya 7 hari ke belakang.', 'error'); 
+    tglInput.value = sevenDaysAgo; 
+  }
   loadExistingEntry(); loadPersonalHistoryChart();
 }
 
