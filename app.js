@@ -16,6 +16,7 @@ function buildParams(fn, args) {
     case 'getReportData': return { kelasFilter: args[0], startDate: args[1], endDate: args[2], roleTarget: args[3], searchQuery: args[4], genderFilter: args[5], page: args[6], limit: args[7] };
     case 'getDailyFillStatus': return { tanggal: args[0], kelasFilter: args[1], userRole: args[2], userKelasBinaan: args[3], statusFilter: args[4], searchQuery: args[5] };
     case 'getTeacherFillStatus': return { tanggal: args[0], searchQuery: args[1] };
+    case 'getTeacherWeeklyStats': return {};
     case 'getPersonalHistory': return { nama: args[0], role: args[1] };
     case 'getClassComparison': return { startDate: args[0], endDate: args[1] };
     case 'getMyNotif': return { username: args[0], nama: args[1], role: args[2] };
@@ -62,7 +63,7 @@ let appState = {
   offlineQueue: JSON.parse(localStorage.getItem('myq_queue') || '[]'),
   reportPage: 1
 };
-let myChart = null, personalChartInstance = null, compareChartInstance = null;
+let myChart = null, personalChartInstance = null, compareChartInstance = null, teacherChartInstance = null;
 let isSyncing = false, _searchTimer = null, _statusTimer = null;
 
 function getEffectiveRole() { return appState.fillFor ? 'siswa' : appState.userRole; }
@@ -521,15 +522,18 @@ async function loadPersonalHistoryChart() {
 
 function setupDateRestrictions() {
   const tglInput = $('tglInput'); if (!tglInput) return;
-  const today = new Date(), yesterday = new Date(Date.now() - 86400000);
-  tglInput.max = fmtLocal(today); tglInput.min = fmtLocal(yesterday);
+  const today = new Date();
+  const sevenDaysAgo = new Date(Date.now() - (7 * 86400000));
+  tglInput.max = fmtLocal(today); 
+  tglInput.min = fmtLocal(sevenDaysAgo);
   tglInput.value = fmtLocal(today);
 }
 function validateDateLock() {
   const tglInput = $('tglInput'); const val = tglInput.value;
-  const today = fmtLocal(new Date()); const yesterday = fmtLocal(new Date(Date.now() - 86400000));
+  const today = fmtLocal(new Date()); 
+  const sevenDaysAgo = fmtLocal(new Date(Date.now() - (7 * 86400000)));
   if (val > today) { showToast('Tidak dapat mengisi tanggal di masa depan!', 'error'); tglInput.value = today; }
-  else if (val < yesterday) { showToast('Maksimal pengisian hanya H-1.', 'error'); tglInput.value = yesterday; }
+  else if (val < sevenDaysAgo) { showToast('Maksimal pengisian hanya 7 hari ke belakang.', 'error'); tglInput.value = sevenDaysAgo; }
   loadExistingEntry(); loadPersonalHistoryChart();
 }
 
@@ -1050,6 +1054,7 @@ async function loadTeacherStatusData() {
   $('statusGuruList').innerHTML = '<div class="text-center p-6 text-slate-500">Memuat data guru...</div>';
   
   try {
+    // Muat Tabel & Summary
     const res = await gsRun('getTeacherFillStatus', tanggal, search);
     
     if (!res || !res.summary) { 
@@ -1057,6 +1062,8 @@ async function loadTeacherStatusData() {
       return; 
     }
     
+    appState.lastStatusGuruData = res; // Simpan untuk fitur Copy
+
     const pct = res.summary.total ? Math.round(res.summary.sudah / res.summary.total * 100) : 0;
     $('statusGuruSummary').innerHTML = `
       <div class="flex flex-wrap items-center gap-2 text-xs">
@@ -1067,28 +1074,69 @@ async function loadTeacherStatusData() {
     
     if (!res.list.length) { 
       $('statusGuruList').innerHTML = '<div class="text-center p-6 text-slate-500">Tidak ada data guru.</div>'; 
-      return; 
-    }
-    
-    let html = '<div class="overflow-x-auto"><table class="w-full text-xs text-left print-table"><thead class="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 uppercase tracking-wider font-bold"><tr><th class="p-3">No</th><th class="p-3">Nama Guru / Staff</th><th class="p-3">Username</th><th class="p-3 text-center">Status</th></tr></thead><tbody class="divide-y divide-slate-100 dark:divide-slate-800">';
-    
-    res.list.forEach((s, i) => {
-      const badge = s.sudah 
-        ? '<span class="text-emerald-700 font-bold"><i class="fa-solid fa-check" aria-hidden="true"></i> Sudah</span>' 
-        : '<span class="text-rose-700 font-bold"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Belum</span>';
-      const rowBg = s.sudah ? '' : 'bg-rose-50/40 dark:bg-rose-950/10';
+    } else {
+      let html = '<div class="overflow-x-auto"><table class="w-full text-xs text-left print-table"><thead class="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 uppercase tracking-wider font-bold"><tr><th class="p-3">No</th><th class="p-3">Nama Guru / Staff</th><th class="p-3">Username</th><th class="p-3 text-center">Status</th></tr></thead><tbody class="divide-y divide-slate-100 dark:divide-slate-800">';
       
-      html += `<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 ${rowBg}">
-        <td class="p-3 text-slate-500">${i + 1}</td>
-        <td class="p-3 font-bold">${esc(s.nama)}</td>
-        <td class="p-3 text-slate-500">@${esc(s.username)}</td>
-        <td class="p-3 text-center">${badge}</td>
-      </tr>`;
-    });
-    html += '</tbody></table></div>';
-    $('statusGuruList').innerHTML = html;
+      res.list.forEach((s, i) => {
+        const badge = s.sudah 
+          ? '<span class="text-emerald-700 font-bold"><i class="fa-solid fa-check" aria-hidden="true"></i> Sudah</span>' 
+          : '<span class="text-rose-700 font-bold"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Belum</span>';
+        const rowBg = s.sudah ? '' : 'bg-rose-50/40 dark:bg-rose-950/10';
+        
+        html += `<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 ${rowBg}">
+          <td class="p-3 text-slate-500">${i + 1}</td>
+          <td class="p-3 font-bold">${esc(s.nama)}</td>
+          <td class="p-3 text-slate-500">@${esc(s.username)}</td>
+          <td class="p-3 text-center">${badge}</td>
+        </tr>`;
+      });
+      html += '</tbody></table></div>';
+      $('statusGuruList').innerHTML = html;
+    }
+
+    // Muat Grafik Guru
+    const chartRes = await gsRun('getTeacherWeeklyStats');
+    if (chartRes && chartRes.success) {
+      if (teacherChartInstance) teacherChartInstance.destroy();
+      const canvas = $('teacherChart');
+      if (canvas) {
+        const isDark = document.documentElement.classList.contains('dark');
+        teacherChartInstance = new Chart(canvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: chartRes.data.map(r => new Date(r.tgl).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric' })),
+            datasets: [{ label: 'Guru Mengisi', data: chartRes.data.map(r => r.jumlah), backgroundColor: '#0ea5e9', borderRadius: 4 }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { beginAtZero: true, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 9 }, stepSize: 1 } } } }
+        });
+      }
+    }
   } catch (e) { 
     $('statusGuruList').innerHTML = '<div class="text-center p-6 text-rose-600">Error memuat data guru.</div>'; 
+  }
+}
+
+function copyBelumIsiGuru() {
+  const res = appState.lastStatusGuruData;
+  if (!res || !res.list) return showToast('Muat data dulu.', 'warning');
+  const belum = res.list.filter(r => !r.sudah);
+  if (!belum.length) return showToast('Semua guru sudah isi! 🎉', 'success');
+  
+  const header = `*Daftar Guru/Staff Belum Isi Mutabaah*\nTanggal: ${$('statusGuruDate').value || '-'}\n\n`;
+  const lines = belum.map((s, i) => `${i + 1}. ${s.nama}`).join('\n');
+  const text = header + lines;
+  
+  const done = () => showToast(`Disalin: ${belum.length} nama guru`);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done, () => {
+      const ta = document.createElement('textarea'); ta.value = text;
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta); done();
+    });
+  } else {
+    const ta = document.createElement('textarea'); ta.value = text;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta); done();
   }
 }
 

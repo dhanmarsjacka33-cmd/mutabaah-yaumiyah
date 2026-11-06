@@ -319,6 +319,12 @@
         <div class="no-print flex flex-wrap gap-2 items-center bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
           <input type="date" id="statusGuruDate" aria-label="Pilih Tanggal Status Guru" onchange="loadTeacherStatusData()" class="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg outline-none text-xs">
           <input type="text" id="statusGuruSearch" aria-label="Cari Nama Guru" placeholder="Cari nama guru..." oninput="loadTeacherStatusData()" class="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg outline-none text-xs w-full md:w-64">
+          <button onclick="copyBelumIsiGuru()" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded-lg text-xs font-bold shadow-sm ml-auto">
+            <i class="fa-solid fa-copy" aria-hidden="true"></i> Salin Guru Belum Isi
+          </button>
+        </div>
+        <div class="relative w-full h-48 no-print bg-slate-50 dark:bg-slate-900/50 rounded-xl p-3 border border-slate-100 dark:border-slate-800 mb-3">
+          <canvas id="teacherChart"></canvas>
         </div>
         <div id="statusGuruSummary"></div>
         <div id="statusGuruList"></div>
