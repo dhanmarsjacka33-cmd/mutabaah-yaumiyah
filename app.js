@@ -20,6 +20,7 @@ function buildParams(fn, args) {
     case 'getPersonalHistory': return { nama: args[0], role: args[1] };
     case 'getClassComparison': return { startDate: args[0], endDate: args[1] };
     case 'getMyNotif': return { username: args[0], nama: args[1], role: args[2] };
+    case 'getUserBadges': return { nama: args[0], role: args[1] };
     case 'getDashboardStats': return { tanggal: args[0] };
     case 'getStudentTimeline': return { nama: args[0], role: args[1], days: args[2] };
     case 'saveClass': return { id: args[0], nama: args[1] };
@@ -910,7 +911,62 @@ async function exportCSV() {
     showToast('File CSV berhasil diunduh.');
   } catch (e) { showToast('Gagal export.', 'error'); }
 }
+async function exportToPDF() {
+  const tab = appState.currentTab;
+  if (!['tabSiswa','tabGuru','tabStatus','tabStatusGuru'].includes(tab)) {
+    return showToast('Pilih tab rekap atau status terlebih dahulu.', 'warning');
+  }
 
+  const btn = $('btnExportPdf');
+  const origHtml = btn.innerHTML;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses PDF...';
+  btn.disabled = true;
+
+  try {
+    // Tentukan elemen mana yang akan di-print berdasarkan tab yang aktif
+    let elementId = '';
+    let fileName = 'Rekap_Mutabaah.pdf';
+
+    if (tab === 'tabSiswa') { elementId = 'contentSiswa'; fileName = 'Rekap_Siswa.pdf'; }
+    else if (tab === 'tabGuru') { elementId = 'contentGuru'; fileName = 'Rekap_Guru.pdf'; }
+    else if (tab === 'tabStatus') { elementId = 'contentStatus'; fileName = 'Status_Harian_Siswa.pdf'; }
+    else if (tab === 'tabStatusGuru') { elementId = 'contentStatusGuru'; fileName = 'Status_Harian_Guru.pdf'; }
+
+    const element = $(elementId);
+    if (!element) throw new Error('Elemen tidak ditemukan');
+
+    // Sembunyikan tombol filter/pencarian sementara agar tidak masuk ke PDF
+    const filterBar = element.querySelector('.no-print');
+    const btnSalin = element.querySelector('button[onclick^="copy"]');
+    if (filterBar) filterBar.style.display = 'none';
+    if (btnSalin && btnSalin.parentElement) btnSalin.parentElement.style.display = 'none';
+
+    // Konfigurasi html2pdf
+    const opt = {
+      margin:       [10, 5, 10, 5], // top, left, bottom, right
+      filename:     fileName,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' } // Landscape agar tabel muat
+    };
+
+    // Proses render PDF
+    await html2pdf().set(opt).from(element).save();
+
+    showToast('PDF berhasil diunduh', 'success');
+
+    // Kembalikan tampilan seperti semula
+    if (filterBar) filterBar.style.display = '';
+    if (btnSalin && btnSalin.parentElement) btnSalin.parentElement.style.display = '';
+
+  } catch (error) {
+    console.error('PDF Error:', error);
+    showToast('Gagal membuat PDF.', 'error');
+  } finally {
+    btn.innerHTML = origHtml;
+    btn.disabled = false;
+  }
+}
 async function showStudentHistory(nama, role) {
   $('historyName').innerText = nama;
   $('historyContent').innerHTML = '<div class="text-center p-6 text-slate-500">Memuat...</div>';
@@ -974,12 +1030,14 @@ function openNotifModal() {
   openModal('notifModal');
 }
 
-function openProfileModal() {
+async function openProfileModal() {
   const role = appState.userRole;
   const roleLabel = { admin: 'Administrator', guru: 'Guru', wali: 'Wali Kelas', musyrif: 'Musyrif', siswa: 'Siswa' }[role] || role;
   const genderLabel = appState.gender === 'P' ? 'Akhwat (P)' : 'Ikhwan (L)';
   const kelasStr = appState.kelasBinaan && appState.kelasBinaan.length ? appState.kelasBinaan.join(', ') : '-';
   const initial = (appState.userName || '?').substring(0, 1).toUpperCase();
+  
+  // Tampilkan UI awal dengan loading badge
   $('profileBody').innerHTML = `
     <div class="text-center">
       <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-2xl font-black">${esc(initial)}</div>
@@ -991,9 +1049,36 @@ function openProfileModal() {
       <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800"><div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">Gender</div><div class="font-bold">${esc(genderLabel)}</div></div>
       <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 col-span-2"><div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">${role === 'siswa' ? 'Kelas' : 'Kelas Binaan'}</div><div class="font-bold">${esc(kelasStr)}</div></div>
     </div>
-    <button onclick="closeModal('profileModal'); openModal('pinModal')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-2.5 rounded-xl text-xs font-bold"><i class="fa-solid fa-key" aria-hidden="true"></i> Ganti PIN</button>
+    
+    <div class="mt-2">
+      <h4 class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">🏆 Lencana Pencapaian</h4>
+      <div id="badgeContainer" class="flex flex-wrap gap-2">
+         <span class="text-xs text-slate-500 animate-pulse">Memuat lencana...</span>
+      </div>
+    </div>
+
+    <button onclick="closeModal('profileModal'); openModal('pinModal')" class="w-full mt-3 bg-emerald-700 hover:bg-emerald-800 text-white py-2.5 rounded-xl text-xs font-bold"><i class="fa-solid fa-key" aria-hidden="true"></i> Ganti PIN</button>
   `;
   openModal('profileModal');
+
+  // Ambil data badge dari backend
+  try {
+    const res = await gsRun('getUserBadges', appState.userName, appState.userRole);
+    if (res && res.success && res.data) {
+      if (res.data.length === 0) {
+        $('badgeContainer').innerHTML = '<span class="text-xs text-slate-500 italic">Belum ada lencana. Yuk rajin isi mutabaah!</span>';
+      } else {
+        $('badgeContainer').innerHTML = res.data.map(b => `
+          <div class="flex flex-col items-center justify-center p-2 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 w-[72px] text-center shadow-sm" title="${esc(b.desc)}">
+            <span class="text-2xl mb-1">${b.icon}</span>
+            <span class="text-[9px] font-bold text-slate-700 dark:text-slate-300 leading-tight">${esc(b.label)}</span>
+          </div>
+        `).join('');
+      }
+    }
+  } catch (e) {
+    $('badgeContainer').innerHTML = '<span class="text-xs text-rose-500">Gagal memuat lencana.</span>';
+  }
 }
 
 async function submitChangePin() {
@@ -1322,16 +1407,28 @@ function confirmArchive() {
 }
 
 // ==========================================
-// FITUR PWA: REGISTRASI SERVICE WORKER
+// FITUR PWA: REGISTRASI SERVICE WORKER & AUTO-UPDATE
 // ==========================================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .then((reg) => {
-        console.log('Service Worker berhasil didaftarkan. Scope:', reg.scope);
-      })
-      .catch((err) => {
-        console.error('Service Worker gagal didaftarkan:', err);
-      });
+    navigator.serviceWorker.register('./service-worker.js').then((reg) => {
+      console.log('Service Worker berhasil didaftarkan. Scope:', reg.scope);
+      
+      // Deteksi jika ada update Service Worker baru
+      reg.onupdatefound = () => {
+        const installingWorker = reg.installing;
+        if (installingWorker) {
+          installingWorker.onstatechange = () => {
+            // Jika SW baru sudah terinstal dan ada SW lama yang aktif
+            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              showToast('Aplikasi diperbarui. Memuat ulang...', 'success');
+              setTimeout(() => { window.location.reload(); }, 1500);
+            }
+          };
+        }
+      };
+    }).catch((err) => {
+      console.error('Service Worker gagal didaftarkan:', err);
+    });
   });
 }

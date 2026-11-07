@@ -248,8 +248,8 @@
           <button onclick="exportCSV()" class="flex-1 md:flex-none bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-2 rounded-lg text-xs font-bold shadow-sm flex items-center justify-center gap-1.5">
             <i class="fa-solid fa-file-excel" aria-hidden="true"></i> Export Excel
           </button>
-          <button onclick="window.print()" class="flex-1 md:flex-none bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm flex items-center justify-center gap-1.5">
-            <i class="fa-solid fa-print" aria-hidden="true"></i> PDF
+          <button onclick="exportToPDF()" id="btnExportPdf" class="flex-1 md:flex-none bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm flex items-center justify-center gap-1.5">
+  <i class="fa-solid fa-file-pdf" aria-hidden="true"></i> Unduh PDF
           </button>
         </div>
       </div>
@@ -584,6 +584,8 @@
   <div id="toast" class="fixed top-16 right-4 p-3.5 rounded-xl shadow-lg text-white font-semibold text-xs transition-all duration-300 transform translate-x-10 opacity-0 pointer-events-none z-[100] flex items-center gap-2.5"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <!-- Tambahan Library untuk Export PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>
